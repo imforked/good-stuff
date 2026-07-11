@@ -21,7 +21,7 @@ enum GROUP_ROLES {
 
 model User {
   id String @id @default(cuid())
-  profile Profile
+  profile Profile?
   comments Comment[]
   alsoRecommendations AlsoRecommend[]
 
