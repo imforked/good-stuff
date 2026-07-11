@@ -1,3 +1,4 @@
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -10,4 +11,134 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum GROUP_ROLES {
+  MEMBER
+  ADMIN
+  SUPER_ADMIN 
+}
+
+model User {
+  id String @id @default(cuid())
+  profile Profile
+  comments Comment[]
+  alsoRecommendations AlsoRecommend[]
+
+  posts Post[]
+  lists UserList[]
+  groupMemberships GroupMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id String @id @default(cuid())
+
+  userId String @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  displayName String
+  pfpS3Url String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id String @id @default(cuid())
+  title String
+  
+  userId String
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+
+  alsoRecommendations AlsoRecommend[]
+  comments Comment[]
+
+  userLists UserList[]
+  groupLists GroupList[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id String @id @default(cuid())
+  text String
+
+  userId String
+  user User @relation(fields: [userId], references: [id],onDelete: Cascade)
+
+  postId String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AlsoRecommend {
+  id String @id @default(cuid())
+
+  userId String
+  postId String
+
+  @@unique([userId, postId])
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Group {
+  id String @id @default(cuid())
+
+  members GroupMember[]
+  lists GroupList[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserList {
+  id String @id @default(cuid())
+
+  posts Post[]
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GroupList {
+  id String @id @default(cuid())
+
+  posts Post[]
+
+  groupId String
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GroupMember {
+  id String @id @default(cuid()) 
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  groupId String
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+
+  groupRole GROUP_ROLES @default(MEMBER)
+
+  joinedAt DateTime @default(now())
 }
