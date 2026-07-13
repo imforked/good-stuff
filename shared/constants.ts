@@ -1,0 +1,1 @@
+export const DISPLAY_NAME_MAX_CHAR = 20;
