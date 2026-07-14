@@ -1,0 +1,50 @@
+info:
+  name: Sign Up
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/auth/sign-up/email
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Plumbus",
+        "email": "plumbus@example.com",
+        "password": "password1234",
+        "image": "https://example.com/avatar.png"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return session token and user", function () {
+          const body = res.getBody();
+
+          expect(body).to.have.property("token").that.is.a("string");
+          expect(body).to.have.property("user");
+
+          expect(body.user).to.have.property("id");
+          expect(body.user).to.have.property("name", "Plumbus");
+          expect(body.user).to.have.property("email", "plumbus@example.com");
+          expect(body.user).to.have.property("emailVerified", false);
+          expect(body.user).to.have.property("image", "https://example.com/avatar.png");
+          expect(body.user).to.have.property("createdAt");
+          expect(body.user).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
