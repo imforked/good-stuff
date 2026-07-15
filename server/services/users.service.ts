@@ -1,24 +1,19 @@
 import { prisma } from "../lib/prisma";
 import { z } from "zod";
 import {
-  createAccountBodySchema,
+  createProfileBodySchema,
   updateProfileBodySchema,
 } from "../schemas/users";
 
-type CreateAccountInput = z.infer<typeof createAccountBodySchema>;
+type CreateProfileInput = z.infer<typeof createProfileBodySchema>;
 type UpdateProfileInput = z.infer<typeof updateProfileBodySchema>;
 
-export const createAccountService = async ({
-  displayName,
-  pfpS3Url,
-}: CreateAccountInput) => {
-  return await prisma.user.create({
-    data: {
-      profile: {
-        create: { displayName, pfpS3Url },
-      },
-    },
-    include: { profile: true },
+export const createProfileService = async (
+  userId: string,
+  { displayName, pfpS3Url }: CreateProfileInput
+) => {
+  return await prisma.profile.create({
+    data: { userId, displayName, pfpS3Url },
   });
 };
 

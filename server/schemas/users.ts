@@ -12,7 +12,7 @@ const displayName = z
 
 const pfpS3Url = z.url({ error: "pfpS3Url must be a URL." });
 
-export const createAccountBodySchema = z.object({
+export const createProfileBodySchema = z.object({
   displayName,
   pfpS3Url,
 });
