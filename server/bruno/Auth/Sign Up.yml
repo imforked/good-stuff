@@ -13,8 +13,8 @@ http:
     type: json
     data: |-
       {
-        "name": "Plumbus",
-        "email": "plumbus@example.com",
+        "name": "{{signUpName}}",
+        "email": "{{signUpEmail}}",
         "password": "password1234",
         "image": "https://example.com/avatar.png"
       }
@@ -22,6 +22,12 @@ http:
 
 runtime:
   scripts:
+    - type: before-request
+      code: |-
+        const stamp = Date.now();
+        // keep displayName-friendly (max 20 chars in app schema)
+        bru.setVar("signUpName", `Plumbus ${String(stamp).slice(-6)}`);
+        bru.setVar("signUpEmail", `plumbus+${stamp}@example.com`);
     - type: after-response
       code: |-
         const body = res.getBody();
@@ -37,13 +43,15 @@ runtime:
 
         test("should return session token and user", function () {
           const body = res.getBody();
+          const signUpName = bru.getVar("signUpName");
+          const signUpEmail = bru.getVar("signUpEmail");
 
           expect(body).to.have.property("token").that.is.a("string");
           expect(body).to.have.property("user");
 
           expect(body.user).to.have.property("id");
-          expect(body.user).to.have.property("name", "Plumbus");
-          expect(body.user).to.have.property("email", "plumbus@example.com");
+          expect(body.user).to.have.property("name", signUpName);
+          expect(body.user).to.have.property("email", signUpEmail);
           expect(body.user).to.have.property("emailVerified", false);
           expect(body.user).to.have.property("image", "https://example.com/avatar.png");
           expect(body.user).to.have.property("createdAt");

@@ -15,7 +15,7 @@ http:
     type: json
     data: |-
       {
-        "displayName": "Plumbus",
+        "displayName": "{{signUpName}}",
         "pfpS3Url": "https://example.com/avatar.png"
       }
   auth: inherit
@@ -30,10 +30,11 @@ runtime:
 
         test("should return the created profile", function () {
           const body = res.getBody();
+          const signUpName = bru.getVar("signUpName");
 
           expect(body).to.have.property("id");
           expect(body).to.have.property("userId");
-          expect(body).to.have.property("displayName", "Plumbus");
+          expect(body).to.have.property("displayName", signUpName);
           expect(body).to.have.property("pfpS3Url", "https://example.com/avatar.png");
           expect(body).to.have.property("createdAt");
           expect(body).to.have.property("updatedAt");
