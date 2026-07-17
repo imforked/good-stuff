@@ -1,0 +1,39 @@
+info:
+  name: Delete Profile
+  type: http
+  seq: 3
+
+http:
+  method: DELETE
+  url: http://localhost:3000/api/delete-profile
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return the deleted profile", function () {
+          const body = res.getBody();
+
+          expect(body).to.have.property("id");
+          expect(body).to.have.property("userId");
+          expect(body).to.have.property("displayName").that.is.a("string");
+          expect(body).to.have.property("pfpS3Url", "https://example.com/avatar.png");
+          expect(body).to.have.property("createdAt");
+          expect(body).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
