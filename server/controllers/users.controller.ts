@@ -5,6 +5,7 @@ import {
 } from "../schemas/users";
 import {
   createProfileService,
+  deleteProfileService,
   updateProfileService,
 } from "../services/users.service";
 import { fromNodeHeaders } from "better-auth/node";
@@ -54,4 +55,18 @@ export const updateProfile = async (req: Request, res: Response) => {
   const newProfile = await updateProfileService(session.user.id, parsed.data);
 
   res.status(200).json(newProfile);
+};
+
+export const deleteProfile = async (req: Request, res: Response) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  if (!session) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+
+  const deletedProfile = await deleteProfileService(session.user.id);
+
+  return res.status(200).json(deletedProfile);
 };

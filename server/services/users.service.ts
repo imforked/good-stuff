@@ -29,3 +29,7 @@ export const updateProfileService = async (
     },
   });
 };
+
+export const deleteProfileService = async (userId: string) => {
+  return await prisma.profile.delete({ where: { userId } });
+};

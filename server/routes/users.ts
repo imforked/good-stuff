@@ -5,3 +5,4 @@ export const usersRouter = express.Router();
 
 usersRouter.post("/create-profile", usersControllers.createProfile);
 usersRouter.put("/update-profile", usersControllers.updateProfile);
+usersRouter.delete("/delete-profile", usersControllers.deleteProfile);
