@@ -1,0 +1,56 @@
+info:
+  name: Create Post
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/create-post
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "title": "{{postTitle}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const stamp = Date.now();
+        bru.setVar("postTitle", `My post ${String(stamp).slice(-6)}`);
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body && body.id) {
+          bru.setVar("postId", body.id);
+        }
+    - type: tests
+      code: |-
+        test("should return 201", function () {
+          expect(res.getStatus()).to.equal(201);
+        });
+
+        test("should return the created post", function () {
+          const body = res.getBody();
+          const postTitle = bru.getVar("postTitle");
+
+          expect(body).to.have.property("id");
+          expect(body).to.have.property("userId");
+          expect(body).to.have.property("title", postTitle);
+          expect(body).to.have.property("createdAt");
+          expect(body).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
