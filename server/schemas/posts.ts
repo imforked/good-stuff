@@ -11,3 +11,7 @@ export const createPostBodySchema = z.object({
       `Post title can be a max of ${POST_TITLE_MAX_CHAR} characters.`
     ),
 });
+
+export const getPostParamsSchema = z.object({
+  postId: z.string().trim().min(1),
+});

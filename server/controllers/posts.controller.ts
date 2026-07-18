@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createPostService } from "../services/posts.service";
-import { createPostBodySchema } from "../schemas/posts";
+import { createPostService, getPostService } from "../services/posts.service";
+import { createPostBodySchema, getPostParamsSchema } from "../schemas/posts";
 import { auth } from "../lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
 
@@ -27,4 +27,31 @@ export const createPost = async (req: Request, res: Response) => {
   });
 
   return res.status(201).json(post);
+};
+
+export const getPost = async (req: Request, res: Response) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  if (!session) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+
+  const parsed = getPostParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: "invalid params",
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const post = await getPostService(parsed.data.postId);
+
+  if (!post) {
+    return res.status(404).json({ error: "post not found" });
+  }
+
+  return res.status(200).json(post);
 };

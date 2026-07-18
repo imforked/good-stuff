@@ -10,3 +10,7 @@ export const createPostService = async (
 ) => {
   return await prisma.post.create({ data: { userId, title } });
 };
+
+export const getPostService = async (postId: string) => {
+  return await prisma.post.findUnique({ where: { id: postId } });
+};
