@@ -7,6 +7,7 @@ import {
   createProfileService,
   deleteProfileService,
   updateProfileService,
+  getProfileService,
 } from "../services/users.service";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth";
@@ -69,4 +70,22 @@ export const deleteProfile = async (req: Request, res: Response) => {
   const deletedProfile = await deleteProfileService(session.user.id);
 
   return res.status(200).json(deletedProfile);
+};
+
+export const getProfile = async (req: Request, res: Response) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  if (!session) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+
+  const profile = await getProfileService(session.user.id);
+
+  if (!profile) {
+    res.status(404).json({ error: "profile not found" });
+  }
+
+  return res.status(200).json(profile);
 };

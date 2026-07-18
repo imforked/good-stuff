@@ -33,3 +33,7 @@ export const updateProfileService = async (
 export const deleteProfileService = async (userId: string) => {
   return await prisma.profile.delete({ where: { userId } });
 };
+
+export const getProfileService = async (userId: string) => {
+  return await prisma.profile.findUnique({ where: { userId } });
+};
