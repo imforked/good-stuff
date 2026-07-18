@@ -1,0 +1,57 @@
+info:
+  name: Update Post
+  type: http
+  seq: 3
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/posts/{{postId}}
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "title": "{{updatedPostTitle}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const stamp = Date.now();
+        bru.setVar("updatedPostTitle", `Updated post ${String(stamp).slice(-6)}`);
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body && body.title) {
+          bru.setVar("postTitle", body.title);
+        }
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return the updated post", function () {
+          const body = res.getBody();
+          const postId = bru.getVar("postId");
+          const updatedPostTitle = bru.getVar("updatedPostTitle");
+
+          expect(body).to.have.property("id", postId);
+          expect(body).to.have.property("userId");
+          expect(body).to.have.property("title", updatedPostTitle);
+          expect(body).to.have.property("createdAt");
+          expect(body).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
