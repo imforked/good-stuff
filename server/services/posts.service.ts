@@ -3,7 +3,6 @@ import { createPostBodySchema, updatePostParamsSchema } from "../schemas/posts";
 import { z } from "zod";
 
 type CreatePostBody = z.infer<typeof createPostBodySchema>;
-type UpdatePostBody = z.infer<typeof updatePostParamsSchema>;
 
 export const createPostService = async (
   userId: string, // from Better Auth / session
