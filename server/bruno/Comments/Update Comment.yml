@@ -1,0 +1,59 @@
+info:
+  name: Update Comment
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: http://localhost:3000/api/comments/{{commentId}}
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "text": "{{updatedCommentText}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const stamp = Date.now();
+        bru.setVar("updatedCommentText", `Edited comment ${String(stamp).slice(-6)}`);
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body && body.text) {
+          bru.setVar("commentText", body.text);
+        }
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return the updated comment", function () {
+          const body = res.getBody();
+          const commentId = bru.getVar("commentId");
+          const postId = bru.getVar("postId");
+          const updatedCommentText = bru.getVar("updatedCommentText");
+
+          expect(body).to.have.property("id", commentId);
+          expect(body).to.have.property("userId");
+          expect(body).to.have.property("postId", postId);
+          expect(body).to.have.property("text", updatedCommentText);
+          expect(body).to.have.property("createdAt");
+          expect(body).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
