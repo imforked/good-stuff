@@ -6,3 +6,4 @@ export const postsRouter = express.Router();
 postsRouter.post("/posts", postsControllers.createPost);
 postsRouter.get("/posts/:postId", postsControllers.getPost);
 postsRouter.put("/posts/:postId", postsControllers.updatePost);
+postsRouter.delete("/posts/:postId", postsControllers.deletePost);

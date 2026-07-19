@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createPostService,
+  deletePostService,
   getPostService,
   updatePostService,
 } from "../services/posts.service";
@@ -9,6 +10,7 @@ import {
   getPostParamsSchema,
   updatePostParamsSchema,
   updatePostBodySchema,
+  deletePostParamsSchema,
 } from "../schemas/posts";
 import { auth } from "../lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
@@ -109,4 +111,36 @@ export const updatePost = async (req: Request, res: Response) => {
   }
 
   return res.status(200).json(updatedPost);
+};
+
+export const deletePost = async (req: Request, res: Response) => {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  if (!session) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+
+  const parsed = deletePostParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res
+      .status(400)
+      .json({ error: "invalid params", details: parsed.error.flatten() });
+  }
+
+  const post = await getPostService(parsed.data.postId);
+
+  if (!post) {
+    return res.status(404).json({ error: "post not found" });
+  }
+
+  if (post.userId !== session.user.id) {
+    return res.status(403).json({ error: "forbidden" });
+  }
+
+  await deletePostService(parsed.data.postId);
+
+  return res.status(204).end();
 };

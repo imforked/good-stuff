@@ -27,3 +27,7 @@ export const updatePostParamsSchema = z.object({
 export const updatePostBodySchema = z.object({
   title,
 });
+
+export const deletePostParamsSchema = z.object({
+  postId,
+});

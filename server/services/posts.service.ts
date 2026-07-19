@@ -25,3 +25,7 @@ export const updatePostService = async ({
 }) => {
   return await prisma.post.update({ where: { id: postId }, data: { title } });
 };
+
+export const deletePostService = async (postId: string) => {
+  return await prisma.post.delete({ where: { id: postId } });
+};
