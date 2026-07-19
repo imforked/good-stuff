@@ -9,17 +9,13 @@ import {
   updateProfileService,
   getProfileService,
 } from "../services/users.service";
-import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "../lib/auth";
+import { requireSession } from "../lib/requireSession";
 import { ERROR } from "../constants";
 
 export const createProfile = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsed = createProfileBodySchema.safeParse(req.body);
@@ -37,12 +33,9 @@ export const createProfile = async (req: Request, res: Response) => {
 };
 
 export const updateProfile = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsed = updateProfileBodySchema.safeParse(req.body);
@@ -60,12 +53,9 @@ export const updateProfile = async (req: Request, res: Response) => {
 };
 
 export const deleteProfile = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const deletedProfile = await deleteProfileService(session.user.id);
@@ -74,12 +64,9 @@ export const deleteProfile = async (req: Request, res: Response) => {
 };
 
 export const getProfile = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const profile = await getProfileService(session.user.id);

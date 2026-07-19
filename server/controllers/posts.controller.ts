@@ -12,17 +12,13 @@ import {
   updatePostBodySchema,
   deletePostParamsSchema,
 } from "../schemas/posts";
-import { auth } from "../lib/auth";
-import { fromNodeHeaders } from "better-auth/node";
+import { requireSession } from "../lib/requireSession";
 import { ERROR } from "../constants";
 
 export const createPost = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsed = createPostBodySchema.safeParse(req.body);
@@ -42,12 +38,9 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const getPost = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsed = getPostParamsSchema.safeParse(req.params);
@@ -69,12 +62,9 @@ export const getPost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsedParams = updatePostParamsSchema.safeParse(req.params);
@@ -117,12 +107,9 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsed = deletePostParamsSchema.safeParse(req.params);

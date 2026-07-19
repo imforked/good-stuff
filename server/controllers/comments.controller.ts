@@ -1,6 +1,4 @@
 import { Request, Response } from "express";
-import { auth } from "../lib/auth";
-import { fromNodeHeaders } from "better-auth/node";
 import { ERROR } from "../constants";
 import {
   createCommentBodySchema,
@@ -8,14 +6,12 @@ import {
 } from "../schemas/comments";
 import { createCommentService } from "../services/comments.service";
 import { getPostService } from "../services/posts.service";
+import { requireSession } from "../lib/requireSession";
 
 export const createComment = async (req: Request, res: Response) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-
+  const session = await requireSession(req, res);
   if (!session) {
-    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
+    return;
   }
 
   const parsedBody = createCommentBodySchema.safeParse(req.body);
