@@ -1,0 +1,58 @@
+info:
+  name: Create Comment
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:3000/api/posts/{{postId}}/comments
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "text": "{{commentText}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const stamp = Date.now();
+        bru.setVar("commentText", `Nice post ${String(stamp).slice(-6)}`);
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body && body.id) {
+          bru.setVar("commentId", body.id);
+        }
+    - type: tests
+      code: |-
+        test("should return 201", function () {
+          expect(res.getStatus()).to.equal(201);
+        });
+
+        test("should return the created comment", function () {
+          const body = res.getBody();
+          const postId = bru.getVar("postId");
+          const commentText = bru.getVar("commentText");
+
+          expect(body).to.have.property("id");
+          expect(body).to.have.property("userId");
+          expect(body).to.have.property("postId", postId);
+          expect(body).to.have.property("text", commentText);
+          expect(body).to.have.property("createdAt");
+          expect(body).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
