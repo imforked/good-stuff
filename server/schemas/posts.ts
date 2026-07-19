@@ -10,7 +10,7 @@ const title = z
     `Post title can be a max of ${POST_TITLE_MAX_CHAR} characters.`
   );
 
-const postId = z.string().trim().min(1);
+export const postId = z.string().trim().min(1);
 
 export const createPostBodySchema = z.object({
   title,
