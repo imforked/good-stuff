@@ -14,6 +14,7 @@ import {
 } from "../schemas/posts";
 import { auth } from "../lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
+import { ERROR } from "../constants";
 
 export const createPost = async (req: Request, res: Response) => {
   const session = await auth.api.getSession({
@@ -21,14 +22,14 @@ export const createPost = async (req: Request, res: Response) => {
   });
 
   if (!session) {
-    return res.status(401).json({ error: "unauthorized" });
+    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
   }
 
   const parsed = createPostBodySchema.safeParse(req.body);
 
   if (!parsed.success) {
     return res.status(400).json({
-      error: "invalid body",
+      error: ERROR.INVALID_BODY,
       details: parsed.error.flatten(),
     });
   }
@@ -46,14 +47,14 @@ export const getPost = async (req: Request, res: Response) => {
   });
 
   if (!session) {
-    return res.status(401).json({ error: "unauthorized" });
+    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
   }
 
   const parsed = getPostParamsSchema.safeParse(req.params);
 
   if (!parsed.success) {
     return res.status(400).json({
-      error: "invalid params",
+      error: ERROR.INVALID_PARAMS,
       details: parsed.error.flatten(),
     });
   }
@@ -61,7 +62,7 @@ export const getPost = async (req: Request, res: Response) => {
   const post = await getPostService(parsed.data.postId);
 
   if (!post) {
-    return res.status(404).json({ error: "post not found" });
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
   }
 
   return res.status(200).json(post);
@@ -73,32 +74,34 @@ export const updatePost = async (req: Request, res: Response) => {
   });
 
   if (!session) {
-    return res.status(401).json({ error: "unauthorized" });
+    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
   }
 
   const parsedParams = updatePostParamsSchema.safeParse(req.params);
   const parsedBody = updatePostBodySchema.safeParse(req.body);
 
   if (!parsedParams.success) {
-    return res
-      .status(400)
-      .json({ error: "invalid params", details: parsedParams.error.flatten() });
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsedParams.error.flatten(),
+    });
   }
 
   if (!parsedBody.success) {
-    return res
-      .status(400)
-      .json({ error: "invalid body", details: parsedBody.error.flatten() });
+    return res.status(400).json({
+      error: ERROR.INVALID_BODY,
+      details: parsedBody.error.flatten(),
+    });
   }
 
   const post = await getPostService(parsedParams.data.postId);
 
   if (!post) {
-    return res.status(404).json({ error: "post not found" });
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
   }
 
   if (session.user.id !== post.userId) {
-    return res.status(403).json({ error: "forbidden" });
+    return res.status(403).json({ error: ERROR.FORBIDDEN });
   }
 
   const updatedPost = await updatePostService({
@@ -107,7 +110,7 @@ export const updatePost = async (req: Request, res: Response) => {
   });
 
   if (!updatedPost) {
-    return res.status(404).json({ error: "post not found" });
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
   }
 
   return res.status(200).json(updatedPost);
@@ -119,25 +122,26 @@ export const deletePost = async (req: Request, res: Response) => {
   });
 
   if (!session) {
-    return res.status(401).json({ error: "unauthorized" });
+    return res.status(401).json({ error: ERROR.UNAUTHORIZED });
   }
 
   const parsed = deletePostParamsSchema.safeParse(req.params);
 
   if (!parsed.success) {
-    return res
-      .status(400)
-      .json({ error: "invalid params", details: parsed.error.flatten() });
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
   }
 
   const post = await getPostService(parsed.data.postId);
 
   if (!post) {
-    return res.status(404).json({ error: "post not found" });
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
   }
 
   if (post.userId !== session.user.id) {
-    return res.status(403).json({ error: "forbidden" });
+    return res.status(403).json({ error: ERROR.FORBIDDEN });
   }
 
   await deletePostService(parsed.data.postId);
