@@ -8,3 +8,7 @@ commentsRouter.post(
   commentsControllers.createComment
 );
 commentsRouter.put("/comments/:commentId", commentsControllers.updateComment);
+commentsRouter.delete(
+  "/comments/:commentId",
+  commentsControllers.deleteComment
+);

@@ -29,3 +29,7 @@ export const updateCommentBodySchema = z.object({
 export const updateCommentParamsSchema = z.object({
   commentId,
 });
+
+export const deleteCommentParamsSchema = z.object({
+  commentId,
+});
