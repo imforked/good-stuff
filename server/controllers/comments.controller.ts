@@ -4,6 +4,7 @@ import {
   createCommentBodySchema,
   createCommentParamsSchema,
   deleteCommentParamsSchema,
+  getPostCommentsParamsSchema,
   updateCommentBodySchema,
   updateCommentParamsSchema,
 } from "../schemas/comments";
@@ -11,6 +12,7 @@ import {
   createCommentService,
   deleteCommentService,
   getCommentService,
+  getPostCommentsService,
   updateCommentService,
 } from "../services/comments.service";
 import { getPostService } from "../services/posts.service";
@@ -133,4 +135,31 @@ export const deleteComment = async (req: Request, res: Response) => {
   await deleteCommentService(parsed.data);
 
   return res.status(204).end();
+};
+
+export const getPostComments = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const parsed = getPostCommentsParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const post = await getPostService(parsed.data.postId);
+
+  if (!post) {
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
+  }
+
+  const comments = await getPostCommentsService(parsed.data);
+
+  return res.status(200).json(comments);
 };

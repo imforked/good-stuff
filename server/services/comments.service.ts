@@ -7,6 +7,7 @@ import {
   updateCommentBodySchema,
   updateCommentParamsSchema,
   deleteCommentParamsSchema,
+  getPostCommentsParamsSchema,
 } from "../schemas/comments";
 
 type CreateCommentBody = z.infer<typeof createCommentBodySchema>;
@@ -15,6 +16,7 @@ type GetCommentParams = z.infer<typeof getCommentParamsSchema>;
 type UpdateCommentBody = z.infer<typeof updateCommentBodySchema>;
 type UpdateCommentParams = z.infer<typeof updateCommentParamsSchema>;
 type DeleteCommentParams = z.infer<typeof deleteCommentParamsSchema>;
+type GetPostCommentsParams = z.infer<typeof getPostCommentsParamsSchema>;
 
 export const createCommentService = async (
   userId: string,
@@ -48,4 +50,13 @@ export const deleteCommentService = async ({
   commentId,
 }: DeleteCommentParams) => {
   return await prisma.comment.delete({ where: { id: commentId } });
+};
+
+export const getPostCommentsService = async ({
+  postId,
+}: GetPostCommentsParams) => {
+  return await prisma.comment.findMany({
+    where: { postId },
+    orderBy: { createdAt: "asc" },
+  });
 };

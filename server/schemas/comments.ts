@@ -33,3 +33,7 @@ export const updateCommentParamsSchema = z.object({
 export const deleteCommentParamsSchema = z.object({
   commentId,
 });
+
+export const getPostCommentsParamsSchema = z.object({
+  postId: z.string().trim().min(1),
+});

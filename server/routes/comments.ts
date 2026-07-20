@@ -12,3 +12,7 @@ commentsRouter.delete(
   "/comments/:commentId",
   commentsControllers.deleteComment
 );
+commentsRouter.get(
+  "/posts/:postId/comments",
+  commentsControllers.getPostComments
+);
