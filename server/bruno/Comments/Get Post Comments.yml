@@ -1,0 +1,47 @@
+info:
+  name: Get Post Comments
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:3000/api/posts/{{postId}}/comments
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return an array of comments for the post", function () {
+          const body = res.getBody();
+          const postId = bru.getVar("postId");
+          const commentId = bru.getVar("commentId");
+          const commentText = bru.getVar("commentText");
+
+          expect(body).to.be.an("array");
+          expect(body.length).to.be.at.least(1);
+
+          const comment = body.find((item) => item.id === commentId);
+
+          expect(comment).to.exist;
+          expect(comment).to.have.property("postId", postId);
+          expect(comment).to.have.property("text", commentText);
+          expect(comment).to.have.property("userId");
+          expect(comment).to.have.property("createdAt");
+          expect(comment).to.have.property("updatedAt");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
