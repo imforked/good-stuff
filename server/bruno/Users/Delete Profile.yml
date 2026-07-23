@@ -5,12 +5,15 @@ info:
 
 http:
   method: DELETE
-  url: http://localhost:3000/api/profile
+  url: http://localhost:3000/api/delete-profile
   headers:
     - name: Origin
       value: http://localhost:3000
     - name: Cookie
       value: better-auth.session_token={{sessionToken}}
+  body:
+    type: json
+    data: ""
   auth: inherit
 
 runtime:
