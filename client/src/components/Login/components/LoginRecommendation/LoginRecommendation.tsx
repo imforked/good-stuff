@@ -4,7 +4,7 @@ export const LoginRecommendation = ({
   recommendations,
 }: LoginRecommendationProps) => {
   return (
-    <div className="relative w-full flex-1">
+    <div className="relative w-full h-[70svh]">
       {recommendations.map(
         ({ title, description, recommendedBy, backgroundImg }) => {
           return (
@@ -14,8 +14,8 @@ export const LoginRecommendation = ({
                 alt={backgroundImg.alt}
                 className="absolute inset-0 h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-linear-to-t from-black/55 via-black/10 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-6 text-left text-white">
+              <div className="absolute inset-0 bg-linear-to-t from-black via-black/10 to-transparent" />
+              <div className="absolute left-10 bottom-0 pb-15 text-left text-white">
                 <h2 className="font-serif text-3xl tracking-wide leading-none text-balance">
                   {title}
                 </h2>
