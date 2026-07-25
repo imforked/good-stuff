@@ -6,7 +6,7 @@ import { motion } from "motion/react";
 export const Drawer = () => {
   return (
     <motion.div
-      className="absolute bottom-0 left-[50%] translate-x-[-50%] backdrop-blur-sm h-[35svh] w-[90%] bg-background/70 rounded-md flex flex-col items-center px-5"
+      className="absolute bottom-0 left-[50%] translate-x-[-50%] backdrop-blur-sm h-[35svh] w-[90%] bg-background/70 rounded-md flex flex-col items-center px-5 z-3"
       initial={{ bottom: "-500px" }}
       animate={{ bottom: "0px", transition: { duration: 0.5 } }}
     >

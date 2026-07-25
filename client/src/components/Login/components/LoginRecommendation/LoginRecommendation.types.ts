@@ -1,7 +1,3 @@
-export type LoginRecommendationProps = {
-  recommendations: Recommendation[];
-};
-
 type BackgroundImg = {
   src: string;
   alt: string;
