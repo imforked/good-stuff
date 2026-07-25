@@ -24,7 +24,7 @@ export const LoginRecommendationCarousel = () => {
           className="absolute inset-0 z-2"
           initial={{ opacity: 0 }}
           animate={isExiting ? { opacity: 0, x: -40 } : { opacity: 1, x: 0 }}
-          transition={{ duration: isExiting ? 1.5 : 0 }}
+          transition={{ duration: isExiting ? 1.5 : 0, ease: "easeIn" }}
           onAnimationComplete={() => {
             if (!isExiting) {
               return;
