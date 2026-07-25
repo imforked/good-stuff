@@ -3,7 +3,7 @@ import { LoginRecommendationCarousel } from "./components/LoginRecommendationCar
 
 export const Login = () => {
   return (
-    <div className="relative flex-1 overflow-hidden bg-surface">
+    <div className="relative flex-1 overflow-hidden bg-background">
       <LoginRecommendationCarousel />
       <Drawer />
     </div>
