@@ -10,7 +10,7 @@ export const RECOMMENDATIONS: Recommendation[] = [
   {
     title: "Forest Park",
     description: "Quiet trails, even on weekends.",
-    recommendedBy: "Sarah",
+    recommendedBy: "Jordan",
     backgroundImg: {
       src: forestPark,
       alt: "A misty path through Forest Park",
@@ -18,8 +18,8 @@ export const RECOMMENDATIONS: Recommendation[] = [
   },
   {
     title: "Powell's City of Books",
-    description: "Get lost in the stacks for an afternoon.",
-    recommendedBy: "Marcus",
+    description: "Easy to lose a whole afternoon in here.",
+    recommendedBy: "Sam",
     backgroundImg: {
       src: powellsBooks,
       alt: "Tall bookshelves inside Powell's City of Books",
@@ -27,8 +27,8 @@ export const RECOMMENDATIONS: Recommendation[] = [
   },
   {
     title: "Japanese Garden",
-    description: "Still water and soft light after rain.",
-    recommendedBy: "Aiko",
+    description: "Worth going even when it's gray out.",
+    recommendedBy: "Casey",
     backgroundImg: {
       src: japaneseGarden,
       alt: "A still pond in the Portland Japanese Garden",
@@ -36,8 +36,8 @@ export const RECOMMENDATIONS: Recommendation[] = [
   },
   {
     title: "Ken's Artisan Bakery",
-    description: "The morning bun worth the wait.",
-    recommendedBy: "Elena",
+    description: "Get there early for the morning bun.",
+    recommendedBy: "Riley",
     backgroundImg: {
       src: kensBakery,
       alt: "Fresh morning buns at Ken's Artisan Bakery",
