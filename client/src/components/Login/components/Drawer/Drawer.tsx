@@ -10,7 +10,7 @@ export const Drawer = () => {
       initial={{ bottom: "-500px" }}
       animate={{ bottom: "0px", transition: { duration: 0.5 } }}
     >
-      <h2 className="w-fit font-serif text-5xl tracking-wide leading-none text-balance mt-13 text-center">
+      <h2 className="w-fit font-serif text-5xl tracking-wide leading-none text-balance mt-8 text-center">
         Good Stuff
       </h2>
       <p className="w-fit text-md text-center">
