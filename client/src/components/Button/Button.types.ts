@@ -1,9 +1,9 @@
+import type { ButtonHTMLAttributes } from "react";
+
 export type ButtonProps = {
-  variant: ButtonVariant;
-  onClick: () => void;
-  text: string;
-  className?: string;
-};
+  variant?: ButtonVariant;
+  error?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export enum ButtonVariant {
   PRIMARY = "primary",
