@@ -1,30 +1,24 @@
-import { SignUpFormSchema } from "./SignUpForm.schema";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { type SignUpFormInputs } from "./SignUpForm.schema";
-import { Button } from "../../../Button";
 import { Input } from "../../../Input";
+import { LogInFormSchema, type LogInFormInputs } from "./LogInForm.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "../../../Button";
 import { authClient } from "../../../../lib/auth-client";
 import { useState } from "react";
-import { BetterAuthError } from "better-auth";
+import type { BetterAuthError } from "better-auth";
 
-export const SignUpForm = () => {
+export const LogInForm = () => {
   const [authError, setAuthError] = useState<BetterAuthError | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormInputs>({
-    resolver: zodResolver(SignUpFormSchema),
+  } = useForm<LogInFormInputs>({
+    resolver: zodResolver(LogInFormSchema),
   });
 
   const INPUT_DATA = [
-    {
-      placeholder: "Full Name",
-      register: register("name"),
-      errorMessage: errors["name"]?.message,
-    },
     {
       placeholder: "Email",
       register: register("email"),
@@ -35,40 +29,30 @@ export const SignUpForm = () => {
       register: register("password"),
       errorMessage: errors["password"]?.message,
     },
-    {
-      placeholder: "Re-Type Password",
-      register: register("passwordMatch"),
-      errorMessage: errors["passwordMatch"]?.message,
-    },
   ];
 
-  const onSubmit: SubmitHandler<SignUpFormInputs> = async ({
-    name,
+  const onSubmit: SubmitHandler<LogInFormInputs> = async ({
     email,
     password,
   }) => {
-    await authClient.signUp.email(
+    await authClient.signIn.email(
       {
-        name: name,
         email: email,
         password: password,
         callbackURL: "placeholder url",
       },
       {
-        onError: (errContext) => {
-          setAuthError(errContext.error);
+        onError: (errContent) => {
+          setAuthError(errContent.error);
         },
       }
     );
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col mt-4"
-    >
-      {INPUT_DATA.map((input, index) => {
-        return <Input key={`${input.placeholder}-${index}`} {...input} />;
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-4">
+      {INPUT_DATA.map((data, index) => {
+        return <Input key={index} {...data} />;
       })}
       <Button disabled={isSubmitting} error={authError?.message} type="submit">
         Submit

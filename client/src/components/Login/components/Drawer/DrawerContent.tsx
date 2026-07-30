@@ -8,7 +8,7 @@ export const DrawerContent = ({
 }: DrawerContentProps) => {
   return (
     <Fragment>
-      <h2 className="w-fit font-serif text-5xl tracking-wide leading-none text-balance mt-8 text-center">
+      <h2 className="w-fit font-serif text-5xl tracking-wide leading-none text-balance text-center">
         {title}
       </h2>
       {description && (

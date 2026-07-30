@@ -9,7 +9,11 @@ export const Login = () => {
   const [pendingView, setPendingView] = useState<View>(View.Welcome);
   const [drawerIsRetracting, setDrawerIsRetracting] = useState(false);
 
-  const session = authClient.useSession();
+  const { data } = authClient.useSession();
+
+  if (data?.session) {
+    return <div>will add something else later</div>;
+  }
 
   return (
     <div className="relative flex-1 overflow-hidden bg-background">
