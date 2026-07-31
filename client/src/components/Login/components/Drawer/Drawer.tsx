@@ -79,7 +79,11 @@ export const Drawer = ({
       }}
     >
       <div className="relative flex min-h-[275px] h-fit w-full flex-col items-center rounded-md bg-background/70 p-5 py-8 backdrop-blur-sm">
-        <div className="absolute top-4 right-4">
+        <div
+          className={`${
+            view === View.Welcome ? "hidden" : "absolute"
+          } top-4 right-4`}
+        >
           <CloseButton
             onClick={() => {
               setDrawerIsRetracting(true);
