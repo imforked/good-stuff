@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { authClient } from "../../../../lib/auth-client";
 import { useState } from "react";
 import { BetterAuthError } from "better-auth";
+import type { InputProps } from "../../../Input/Input.types";
 
 export const SignUpForm = () => {
   const [authError, setAuthError] = useState<BetterAuthError | null>(null);
@@ -19,26 +20,28 @@ export const SignUpForm = () => {
     resolver: zodResolver(SignUpFormSchema),
   });
 
-  const INPUT_DATA = [
+  const INPUT_DATA: InputProps[] = [
     {
       placeholder: "Full Name",
       register: register("name"),
-      errorMessage: errors["name"]?.message,
+      helperText: errors["name"]?.message,
     },
     {
       placeholder: "Email",
       register: register("email"),
-      errorMessage: errors["email"]?.message,
+      helperText: errors["email"]?.message,
     },
     {
       placeholder: "Password",
       register: register("password"),
-      errorMessage: errors["password"]?.message,
+      helperText: errors["password"]?.message ?? "At least 12 characters.",
+      type: "password",
     },
     {
       placeholder: "Re-Type Password",
       register: register("passwordMatch"),
-      errorMessage: errors["passwordMatch"]?.message,
+      helperText: errors["passwordMatch"]?.message,
+      type: "password",
     },
   ];
 

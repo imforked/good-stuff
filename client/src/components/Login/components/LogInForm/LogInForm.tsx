@@ -6,6 +6,7 @@ import { Button } from "../../../Button";
 import { authClient } from "../../../../lib/auth-client";
 import { useState } from "react";
 import type { BetterAuthError } from "better-auth";
+import type { InputProps } from "../../../Input/Input.types";
 
 export const LogInForm = () => {
   const [authError, setAuthError] = useState<BetterAuthError | null>(null);
@@ -18,16 +19,17 @@ export const LogInForm = () => {
     resolver: zodResolver(LogInFormSchema),
   });
 
-  const INPUT_DATA = [
+  const INPUT_DATA: InputProps[] = [
     {
       placeholder: "Email",
       register: register("email"),
-      errorMessage: errors["email"]?.message,
+      helperText: errors["email"]?.message,
     },
     {
       placeholder: "Password",
       register: register("password"),
-      errorMessage: errors["password"]?.message,
+      helperText: errors["password"]?.message,
+      type: "password",
     },
   ];
 
