@@ -41,7 +41,7 @@ export const LogInForm = () => {
       {
         email: email,
         password: password,
-        callbackURL: "placeholder url",
+        callbackURL: "/feed",
       },
       {
         onError: (errContent) => {

@@ -1,11 +1,14 @@
-import { Login } from "./components/Login/";
 import { Layout } from "./components/Layout";
+import { BrowserRouter } from "react-router";
+import { AppRoutes } from "./routes/AppRoutes";
 
 function App() {
   return (
-    <Layout>
-      <Login />
-    </Layout>
+    <BrowserRouter>
+      <Layout>
+        <AppRoutes />
+      </Layout>
+    </BrowserRouter>
   );
 }
 

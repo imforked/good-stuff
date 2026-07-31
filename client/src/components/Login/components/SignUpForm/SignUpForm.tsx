@@ -55,7 +55,7 @@ export const SignUpForm = () => {
         name: name,
         email: email,
         password: password,
-        callbackURL: "placeholder url",
+        callbackURL: "/feed",
       },
       {
         onError: (errContext) => {
