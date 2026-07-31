@@ -5,6 +5,7 @@ import { ButtonVariant, type ButtonProps } from "./Button.types";
 export const Button = ({
   variant = ButtonVariant.PRIMARY,
   error,
+  reserveErrorSpace,
   onClick,
   className,
   children,
@@ -20,13 +21,15 @@ export const Button = ({
         {children}
       </button>
 
-      <p
-        className={`text-xs text-center min-h-[20px] w-full pb-1 block ${
-          error ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {error}
-      </p>
+      {reserveErrorSpace && (
+        <p
+          className={`text-xs text-center min-h-[20px] w-full pb-1 block ${
+            error ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {error}
+        </p>
+      )}
     </Fragment>
   );
 };

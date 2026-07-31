@@ -54,7 +54,12 @@ export const LogInForm = () => {
       {INPUT_DATA.map((data, index) => {
         return <Input key={index} {...data} />;
       })}
-      <Button disabled={isSubmitting} error={authError?.message} type="submit">
+      <Button
+        reserveErrorSpace
+        disabled={isSubmitting}
+        error={authError?.message}
+        type="submit"
+      >
         Submit
       </Button>
     </form>

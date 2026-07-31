@@ -70,7 +70,12 @@ export const SignUpForm = () => {
       {INPUT_DATA.map((input, index) => {
         return <Input key={`${input.placeholder}-${index}`} {...input} />;
       })}
-      <Button disabled={isSubmitting} error={authError?.message} type="submit">
+      <Button
+        reserveErrorSpace
+        disabled={isSubmitting}
+        error={authError?.message}
+        type="submit"
+      >
         Submit
       </Button>
     </form>
