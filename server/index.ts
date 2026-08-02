@@ -1,7 +1,6 @@
 import express from "express";
 import { usersRouter } from "./routes/users";
 import { postsRouter } from "./routes/posts";
-import { commentsRouter } from "./routes/comments";
 import { errorHandler } from "./middleware";
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
@@ -36,7 +35,6 @@ app.use(express.json());
 
 app.use(PATH_PREFIX, usersRouter);
 app.use(PATH_PREFIX, postsRouter);
-app.use(PATH_PREFIX, commentsRouter);
 
 app.use(errorHandler);
 
