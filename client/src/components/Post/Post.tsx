@@ -23,11 +23,10 @@ export const Post = ({
   const navigate = useNavigate();
 
   const recommenderName = user.profile?.displayName ?? user.name;
-  const recommenderImage =
-    user.profile?.pfpS3Url ?? user.image ?? undefined;
+  const recommenderImage = user.profile?.pfpS3Url ?? user.image ?? undefined;
 
   return (
-    <button
+    <div
       onClick={() => setIsDescriptionActive(!isDescriptionActive)}
       className="relative w-full rounded-md shadow bg-white overflow-hidden text-left cursor-pointer"
     >
@@ -120,6 +119,6 @@ export const Post = ({
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
