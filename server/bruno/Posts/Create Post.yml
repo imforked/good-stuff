@@ -15,7 +15,12 @@ http:
     type: json
     data: |-
       {
-        "title": "{{postTitle}}"
+        "heroImgUrl": "{{postHeroImgUrl}}",
+        "title": "{{postTitle}}",
+        "shortDescription": "{{postShortDescription}}",
+        "longDescription": "{{postLongDescription}}",
+        "type": "{{postType}}",
+        "location": "{{postLocation}}"
       }
   auth: inherit
 
@@ -24,7 +29,17 @@ runtime:
     - type: before-request
       code: |-
         const stamp = Date.now();
-        bru.setVar("postTitle", `My post ${String(stamp).slice(-6)}`);
+        const suffix = String(stamp).slice(-6);
+
+        bru.setVar("postHeroImgUrl", "https://example.com/posts/forest-park.png");
+        bru.setVar("postTitle", `Forest Park ${suffix}`);
+        bru.setVar("postShortDescription", "Quiet trails, even on weekends");
+        bru.setVar(
+          "postLongDescription",
+          "I come back to Forest Park whenever Portland feels too loud. Trails stay quiet even on weekends."
+        );
+        bru.setVar("postType", "HIKE");
+        bru.setVar("postLocation", "NORTHWEST");
     - type: after-response
       code: |-
         const body = res.getBody();
@@ -40,11 +55,21 @@ runtime:
 
         test("should return the created post", function () {
           const body = res.getBody();
+          const postHeroImgUrl = bru.getVar("postHeroImgUrl");
           const postTitle = bru.getVar("postTitle");
+          const postShortDescription = bru.getVar("postShortDescription");
+          const postLongDescription = bru.getVar("postLongDescription");
+          const postType = bru.getVar("postType");
+          const postLocation = bru.getVar("postLocation");
 
           expect(body).to.have.property("id");
           expect(body).to.have.property("userId");
+          expect(body).to.have.property("heroImgUrl", postHeroImgUrl);
           expect(body).to.have.property("title", postTitle);
+          expect(body).to.have.property("shortDescription", postShortDescription);
+          expect(body).to.have.property("longDescription", postLongDescription);
+          expect(body).to.have.property("type", postType);
+          expect(body).to.have.property("location", postLocation);
           expect(body).to.have.property("createdAt");
           expect(body).to.have.property("updatedAt");
         });
