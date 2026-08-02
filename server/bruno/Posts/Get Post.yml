@@ -24,7 +24,7 @@ runtime:
         test("should return the post", function () {
           const body = res.getBody();
           const postId = bru.getVar("postId");
-          const postHeroImgUrl = bru.getVar("postHeroImgUrl");
+          const postHeroImgS3Url = bru.getVar("postHeroImgS3Url");
           const postTitle = bru.getVar("postTitle");
           const postShortDescription = bru.getVar("postShortDescription");
           const postLongDescription = bru.getVar("postLongDescription");
@@ -33,7 +33,7 @@ runtime:
 
           expect(body).to.have.property("id", postId);
           expect(body).to.have.property("userId");
-          expect(body).to.have.property("heroImgUrl", postHeroImgUrl);
+          expect(body).to.have.property("heroImgS3Url", postHeroImgS3Url);
           expect(body).to.have.property("title", postTitle);
           expect(body).to.have.property("shortDescription", postShortDescription);
           expect(body).to.have.property("longDescription", postLongDescription);

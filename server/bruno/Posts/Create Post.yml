@@ -15,7 +15,7 @@ http:
     type: json
     data: |-
       {
-        "heroImgUrl": "{{postHeroImgUrl}}",
+        "heroImgS3Url": "{{postHeroImgS3Url}}",
         "title": "{{postTitle}}",
         "shortDescription": "{{postShortDescription}}",
         "longDescription": "{{postLongDescription}}",
@@ -31,7 +31,7 @@ runtime:
         const stamp = Date.now();
         const suffix = String(stamp).slice(-6);
 
-        bru.setVar("postHeroImgUrl", "https://example.com/posts/forest-park.png");
+        bru.setVar("postHeroImgS3Url", "https://example.com/posts/forest-park.png");
         bru.setVar("postTitle", `Forest Park ${suffix}`);
         bru.setVar("postShortDescription", "Quiet trails, even on weekends");
         bru.setVar(
@@ -55,7 +55,7 @@ runtime:
 
         test("should return the created post", function () {
           const body = res.getBody();
-          const postHeroImgUrl = bru.getVar("postHeroImgUrl");
+          const postHeroImgS3Url = bru.getVar("postHeroImgS3Url");
           const postTitle = bru.getVar("postTitle");
           const postShortDescription = bru.getVar("postShortDescription");
           const postLongDescription = bru.getVar("postLongDescription");
@@ -64,7 +64,7 @@ runtime:
 
           expect(body).to.have.property("id");
           expect(body).to.have.property("userId");
-          expect(body).to.have.property("heroImgUrl", postHeroImgUrl);
+          expect(body).to.have.property("heroImgS3Url", postHeroImgS3Url);
           expect(body).to.have.property("title", postTitle);
           expect(body).to.have.property("shortDescription", postShortDescription);
           expect(body).to.have.property("longDescription", postLongDescription);

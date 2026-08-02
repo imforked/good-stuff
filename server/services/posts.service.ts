@@ -12,13 +12,13 @@ export const createPostService = async (
     longDescription,
     type,
     location,
-    heroImgUrl,
+    heroImgS3Url,
   }: CreatePostBody
 ) => {
   return await prisma.post.create({
     data: {
       userId,
-      heroImgUrl,
+      heroImgS3Url,
       title,
       shortDescription,
       longDescription,

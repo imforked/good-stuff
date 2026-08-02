@@ -38,12 +38,14 @@ const type = z.enum(POST_TYPES);
 
 const location = z.enum(POST_LOCATIONS);
 
-const heroImgUrl = z.string().min(1, "Hero image URL must be at least 1 character.");
+const heroImgS3Url = z
+  .string()
+  .min(1, "Hero image S3 URL must be at least 1 character.");
 
 export const postId = z.string().trim().min(1);
 
 export const createPostBodySchema = z.object({
-  heroImgUrl,
+  heroImgS3Url,
   title,
   shortDescription,
   longDescription,

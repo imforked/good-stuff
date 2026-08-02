@@ -175,7 +175,7 @@ model Profile {
 
 model Post {
   id               String        @id @default(cuid())
-  heroImgUrl       String
+  heroImgS3Url     String
   title            String
   shortDescription String
   longDescription  String
