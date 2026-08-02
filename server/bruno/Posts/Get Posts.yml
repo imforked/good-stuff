@@ -1,0 +1,58 @@
+info:
+  name: Get Posts
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: http://localhost:3000/api/posts
+  headers:
+    - name: Origin
+      value: http://localhost:3000
+    - name: Cookie
+      value: better-auth.session_token={{sessionToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("should return posts with feed fields", function () {
+          const body = res.getBody();
+
+          expect(body).to.be.an("array");
+          expect(body.length).to.be.at.least(1);
+
+          const post = body[0];
+
+          expect(post).to.have.property("id");
+          expect(post).to.have.property("userId");
+          expect(post).to.have.property("heroImgS3Url");
+          expect(post).to.have.property("title");
+          expect(post).to.have.property("shortDescription");
+          expect(post).to.have.property("longDescription");
+          expect(post).to.have.property("type");
+          expect(post).to.have.property("location");
+          expect(post).to.have.property("createdAt");
+          expect(post).to.have.property("updatedAt");
+          expect(post).to.have.property("isBookmarked").that.is.a("boolean");
+
+          expect(post).to.have.property("user");
+          expect(post.user).to.have.property("profile");
+
+          expect(post).to.have.property("saves").that.is.an("array");
+          expect(post.saves.length).to.be.at.most(3);
+
+          expect(post).to.have.property("_count");
+          expect(post._count).to.have.property("saves").that.is.a("number");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
