@@ -30,9 +30,7 @@ export const createPost = async (req: Request, res: Response) => {
     });
   }
 
-  const post = await createPostService(session.user.id, {
-    title: parsed.data.title,
-  });
+  const post = await createPostService(session.user.id, parsed.data);
 
   return res.status(201).json(post);
 };

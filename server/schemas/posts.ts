@@ -1,19 +1,54 @@
 import { z } from "zod";
-import { POST_TITLE_MAX_CHAR } from "../../shared/constants";
+import {
+  POST_TITLE_MAX_CHAR,
+  POST_LONG_DESCRIPTION_MAX_CHAR,
+  POST_SHORT_DESCRIPTION_MAX_CHAR,
+  POST_TYPES,
+  POST_LOCATIONS,
+} from "../../shared/constants";
 
 const title = z
   .string()
   .trim()
-  .min(1, "Post title must be at least 1 character.")
+  .min(1, "Title must be at least 1 character.")
   .max(
     POST_TITLE_MAX_CHAR,
-    `Post title can be a max of ${POST_TITLE_MAX_CHAR} characters.`
+    `Title can be a max of ${POST_TITLE_MAX_CHAR} characters.`
   );
+
+const shortDescription = z
+  .string()
+  .trim()
+  .min(1, "Short description must be at least 1 character.")
+  .max(
+    POST_SHORT_DESCRIPTION_MAX_CHAR,
+    `Short description can be a max of ${POST_SHORT_DESCRIPTION_MAX_CHAR} characters.`
+  );
+
+const longDescription = z
+  .string()
+  .trim()
+  .min(1, "Long description must be at least 1 character.")
+  .max(
+    POST_LONG_DESCRIPTION_MAX_CHAR,
+    `Long description can be a max of ${POST_LONG_DESCRIPTION_MAX_CHAR} characters.`
+  );
+
+const type = z.enum(POST_TYPES);
+
+const location = z.enum(POST_LOCATIONS);
+
+const heroImgUrl = z.string().min(1, "Hero image URL must be at least 1 character.");
 
 export const postId = z.string().trim().min(1);
 
 export const createPostBodySchema = z.object({
+  heroImgUrl,
   title,
+  shortDescription,
+  longDescription,
+  type,
+  location,
 });
 
 export const getPostParamsSchema = z.object({

@@ -6,9 +6,26 @@ type CreatePostBody = z.infer<typeof createPostBodySchema>;
 
 export const createPostService = async (
   userId: string, // from Better Auth / session
-  { title }: CreatePostBody // from the client
+  {
+    title,
+    shortDescription,
+    longDescription,
+    type,
+    location,
+    heroImgUrl,
+  }: CreatePostBody
 ) => {
-  return await prisma.post.create({ data: { userId, title } });
+  return await prisma.post.create({
+    data: {
+      userId,
+      heroImgUrl,
+      title,
+      shortDescription,
+      longDescription,
+      type,
+      location,
+    },
+  });
 };
 
 export const getPostService = async (postId: string) => {
