@@ -21,21 +21,19 @@ export const Feed = () => {
         });
 
         if (!response.ok) {
-          console.error(`HTTP Error. Status: ${response.status}`);
+          return console.error(`HTTP Error. Status: ${response.status}`);
         }
 
         const data = await response.json();
 
         setPosts(data);
       } catch (error) {
-        console.error(`Failed to get posts:`, error);
+        return console.error(`Failed to get posts:`, error);
       }
     };
 
     getPosts();
   }, []);
-
-  console.log(posts);
 
   return (
     <Page>
