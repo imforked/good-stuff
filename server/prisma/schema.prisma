@@ -18,24 +18,143 @@ enum GROUP_ROLES {
   SUPER_ADMIN
 }
 
+enum POST_TYPE {
+  RESTAURANT
+  COFFEE_SHOP
+  BAKERY
+  BAR
+  BREWERY
+  WINERY
+  FOOD_CART
+  DESSERT
+  HIKE
+  PARK
+  GARDEN
+  VIEWPOINT
+  BEACH
+  WATERFALL
+  CAMPING
+  GALLERY
+  MUSEUM
+  MURAL
+  BOOKSTORE
+  LIVE_MUSIC
+  CONCERT
+  COMEDY
+  THEATER
+  MOVIE
+  FESTIVAL
+  EVENT
+  ARCADE
+  SHOP
+  VINTAGE_STORE
+  RECORD_STORE
+  FARMERS_MARKET
+  BIKE_RIDE
+  RUNNING_ROUTE
+  CLIMBING_GYM
+  GYM
+  YOGA
+  SPA
+  ALBUM
+  SONG
+  PLAYLIST
+  PODCAST
+  BOOK
+  TV_SHOW
+  VIDEO_GAME
+  BOARD_GAME
+  AIRBNB
+  HOTEL
+  DAY_TRIP
+  ROAD_TRIP
+  DOG_FRIENDLY
+  FAMILY_ACTIVITY
+  DATE_IDEA
+  HIDDEN_GEM
+}
+
+enum POST_LOCATION {
+  // Regions
+  NORTH
+  NORTHEAST
+  NORTHWEST
+  SOUTH
+  SOUTHEAST
+  SOUTHWEST
+
+  // Central
+  DOWNTOWN
+  PEARL_DISTRICT
+  OLD_TOWN_CHINATOWN
+  SOUTH_WATERFRONT
+
+  // North
+  ST_JOHNS
+  CATHEDRAL_PARK
+  PORTSMOUTH
+  UNIVERSITY_PARK
+  KENTON
+
+  // Northeast
+  ALBERTA_ARTS
+  CONCORDIA
+  BEAUMONT_WILSHIRE
+  HOLLYWOOD
+  ROSEWAY
+  CULLY
+  IRVINGTON
+  SABIN
+  KING
+
+  // Northwest
+  NOB_HILL
+  SLABTOWN
+  FOREST_PARK
+
+  // Southeast
+  HAWTHORNE
+  DIVISION
+  BELMONT
+  BUCKMAN
+  MT_TABOR
+  SELLWOOD_MORELAND
+  REED
+  LADD_ADDITION
+  CRESTON_KENILWORTH
+  WOODSTOCK
+  MONTAVILLA
+
+  // Southwest
+  HILLSDALE
+  MULTNOMAH_VILLAGE
+  SOUTHWEST_HILLS
+
+  // East Portland
+  GATEWAY
+  PARKROSE
+  LENTS
+  POWELLHURST_GILBERT
+  ARGAY
+}
+
 model User {
-  id                  String          @id @default(cuid())
-  profile             Profile?
-  comments            Comment[]
-  alsoRecommendations AlsoRecommend[]
+  id      String   @id @default(cuid())
+  profile Profile?
 
   posts            Post[]
   lists            UserList[]
   groupMemberships GroupMember[]
 
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean    @default(false)
   image         String?
   sessions      Session[]
   accounts      Account[]
+  bookmarks     Bookmark[]
 
   @@unique([email])
   @@map("user")
@@ -55,13 +174,16 @@ model Profile {
 }
 
 model Post {
-  id     String @id @default(cuid())
-  title  String
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  alsoRecommendations AlsoRecommend[]
-  comments            Comment[]
+  id               String        @id @default(cuid())
+  heroImgUrl       String
+  title            String
+  shortDescription String
+  longDescription  String
+  type             POST_TYPE
+  location         POST_LOCATION
+  userId           String
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  saves            Bookmark[]
 
   userLists  UserList[]
   groupLists GroupList[]
@@ -69,33 +191,17 @@ model Post {
   updatedAt  DateTime    @updatedAt
 }
 
-model Comment {
-  id   String @id @default(cuid())
-  text String
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model AlsoRecommend {
-  id String @id @default(cuid())
-
-  userId String
-  postId String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
   @@unique([userId, postId])
+  @@index([postId])
+  @@index([userId])
 }
 
 model Group {
