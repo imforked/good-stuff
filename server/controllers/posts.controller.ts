@@ -3,6 +3,7 @@ import {
   createPostService,
   deletePostService,
   getPostService,
+  getPostsService,
   updatePostService,
 } from "../services/posts.service";
 import {
@@ -57,6 +58,18 @@ export const getPost = async (req: Request, res: Response) => {
   }
 
   return res.status(200).json(post);
+};
+
+export const getPosts = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const posts = await getPostsService(session.user.id);
+
+  return res.status(200).json(posts);
 };
 
 export const updatePost = async (req: Request, res: Response) => {

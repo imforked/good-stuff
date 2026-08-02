@@ -44,6 +44,8 @@ const heroImgS3Url = z
 
 export const postId = z.string().trim().min(1);
 
+export const userId = z.string().trim().min(1);
+
 export const createPostBodySchema = z.object({
   heroImgS3Url,
   title,
@@ -51,6 +53,10 @@ export const createPostBodySchema = z.object({
   longDescription,
   type,
   location,
+});
+
+export const getPostsParamsSchema = z.object({
+  userId,
 });
 
 export const getPostParamsSchema = z.object({
