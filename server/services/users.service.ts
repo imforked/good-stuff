@@ -1,9 +1,9 @@
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 import { z } from "zod";
 import {
   createProfileBodySchema,
   updateProfileBodySchema,
-} from "../schemas/users";
+} from "../schemas/users.js";
 
 type CreateProfileInput = z.infer<typeof createProfileBodySchema>;
 type UpdateProfileInput = z.infer<typeof updateProfileBodySchema>;

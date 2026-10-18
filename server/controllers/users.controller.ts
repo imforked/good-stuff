@@ -2,15 +2,15 @@ import { Request, Response } from "express";
 import {
   createProfileBodySchema,
   updateProfileBodySchema,
-} from "../schemas/users";
+} from "../schemas/users.js";
 import {
   createProfileService,
   deleteProfileService,
   updateProfileService,
   getProfileService,
-} from "../services/users.service";
-import { requireSession } from "../lib/requireSession";
-import { ERROR } from "../constants";
+} from "../services/users.service.js";
+import { requireSession } from "../lib/requireSession.js";
+import { ERROR } from "../constants.js";
 
 export const createProfile = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);

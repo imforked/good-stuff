@@ -5,7 +5,7 @@ import {
   POST_SHORT_DESCRIPTION_MAX_CHAR,
   POST_TYPES,
   POST_LOCATIONS,
-} from "../../shared/constants";
+} from "../../shared/constants.js";
 
 const title = z
   .string()

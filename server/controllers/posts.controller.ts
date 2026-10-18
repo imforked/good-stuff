@@ -5,16 +5,16 @@ import {
   getPostService,
   getPostsService,
   updatePostService,
-} from "../services/posts.service";
+} from "../services/posts.service.js";
 import {
   createPostBodySchema,
   getPostParamsSchema,
   updatePostParamsSchema,
   updatePostBodySchema,
   deletePostParamsSchema,
-} from "../schemas/posts";
-import { requireSession } from "../lib/requireSession";
-import { ERROR } from "../constants";
+} from "../schemas/posts.js";
+import { requireSession } from "../lib/requireSession.js";
+import { ERROR } from "../constants.js";
 
 export const createPost = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);

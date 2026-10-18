@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DISPLAY_NAME_MAX_CHAR } from "../../shared/constants";
+import { DISPLAY_NAME_MAX_CHAR } from "../../shared/constants.js";
 
 const displayName = z
   .string()

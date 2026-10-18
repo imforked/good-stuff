@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { auth } from "../lib/auth";
-import { prisma } from "../lib/prisma";
-import type { PostLocation, PostType } from "../../shared/constants";
+import { auth } from "../lib/auth.js";
+import { prisma } from "../lib/prisma.js";
+import type { PostLocation, PostType } from "../../shared/constants.js";
 
 const SEED_PASSWORD = "password1234";
 

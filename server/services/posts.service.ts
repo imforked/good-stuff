@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import { createPostBodySchema } from "../schemas/posts";
+import { prisma } from "../lib/prisma.js";
+import { createPostBodySchema } from "../schemas/posts.js";
 import { z } from "zod";
 
 type CreatePostBody = z.infer<typeof createPostBodySchema>;

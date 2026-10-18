@@ -1,12 +1,12 @@
 import express from "express";
-import { usersRouter } from "./routes/users";
-import { postsRouter } from "./routes/posts";
-import { errorHandler } from "./middleware";
-import { auth } from "./lib/auth";
+import { usersRouter } from "./routes/users.js";
+import { postsRouter } from "./routes/posts.js";
+import { errorHandler } from "./middleware/index.js";
+import { auth } from "./lib/auth.js";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { isAllowedOrigin } from "./constants/allowedOrigins";
+import { isAllowedOrigin } from "./constants/allowedOrigins.js";
 
 const PORT = process.env.PORT || 3000;
 const PATH_PREFIX = "/api";
