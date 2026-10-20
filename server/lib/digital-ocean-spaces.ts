@@ -11,10 +11,20 @@ const requireEnv = (name: string): string => {
   return value;
 };
 
+const spacesEndpoint = requireEnv("DIGITAL_OCEAN_SPACES_ENDPOINT");
+
 export const spacesBucket = requireEnv("DIGITAL_OCEAN_SPACES_BUCKET");
 
+export const spacesObjectUrl = (key: string): string => {
+  const endpoint = new URL(spacesEndpoint);
+  const url = new URL(`https://${spacesBucket}.${endpoint.host}/`);
+  url.pathname = key.startsWith("/") ? key : `/${key}`;
+
+  return url.toString();
+};
+
 export const spacesClient = new S3Client({
-  endpoint: requireEnv("DIGITAL_OCEAN_SPACES_ENDPOINT"),
+  endpoint: spacesEndpoint,
   region: requireEnv("DIGITAL_OCEAN_SPACES_REGION"),
   credentials: {
     accessKeyId: requireEnv("DIGITAL_OCEAN_SPACES_KEY"),
