@@ -6,6 +6,7 @@ import {
   POST_TYPES,
   POST_LOCATIONS,
 } from "../../shared/constants.js";
+import { spacesBucket, spacesRegion } from "../lib/digital-ocean-spaces.js";
 
 const title = z
   .string()
@@ -13,7 +14,7 @@ const title = z
   .min(1, "Title must be at least 1 character.")
   .max(
     POST_TITLE_MAX_CHAR,
-    `Title can be a max of ${POST_TITLE_MAX_CHAR} characters.`
+    `Title can be a max of ${POST_TITLE_MAX_CHAR} characters.`,
   );
 
 const shortDescription = z
@@ -22,7 +23,7 @@ const shortDescription = z
   .min(1, "Short description must be at least 1 character.")
   .max(
     POST_SHORT_DESCRIPTION_MAX_CHAR,
-    `Short description can be a max of ${POST_SHORT_DESCRIPTION_MAX_CHAR} characters.`
+    `Short description can be a max of ${POST_SHORT_DESCRIPTION_MAX_CHAR} characters.`,
   );
 
 const longDescription = z
@@ -31,16 +32,23 @@ const longDescription = z
   .min(1, "Long description must be at least 1 character.")
   .max(
     POST_LONG_DESCRIPTION_MAX_CHAR,
-    `Long description can be a max of ${POST_LONG_DESCRIPTION_MAX_CHAR} characters.`
+    `Long description can be a max of ${POST_LONG_DESCRIPTION_MAX_CHAR} characters.`,
   );
 
 const type = z.enum(POST_TYPES);
 
 const location = z.enum(POST_LOCATIONS);
 
-const heroImgS3Url = z
-  .string()
-  .min(1, "Hero image S3 URL must be at least 1 character.");
+const heroImgS3Url = z.url().refine((value) => {
+  const url = new URL(value);
+
+  return (
+    url.protocol === "https:" &&
+    url.hostname === `${spacesBucket}.${spacesRegion}.digitaloceanspaces.com` &&
+    url.pathname.startsWith("/uploads/") &&
+    url.search === ""
+  );
+});
 
 export const postId = z.string().trim().min(1);
 

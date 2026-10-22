@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { S3Client } from "@aws-sdk/client-s3";
 
-const requireEnv = (name: string): string => {
+export const requireEnv = (name: string): string => {
   const value = process.env[name];
 
   if (value === undefined || value === "") {
@@ -12,8 +12,8 @@ const requireEnv = (name: string): string => {
 };
 
 const spacesEndpoint = requireEnv("DIGITAL_OCEAN_SPACES_ENDPOINT");
-
 export const spacesBucket = requireEnv("DIGITAL_OCEAN_SPACES_BUCKET");
+export const spacesRegion = requireEnv("DIGITAL_OCEAN_SPACES_REGION");
 
 export const spacesObjectUrl = (key: string): string => {
   const endpoint = new URL(spacesEndpoint);
@@ -25,7 +25,7 @@ export const spacesObjectUrl = (key: string): string => {
 
 export const spacesClient = new S3Client({
   endpoint: spacesEndpoint,
-  region: requireEnv("DIGITAL_OCEAN_SPACES_REGION"),
+  region: spacesRegion,
   credentials: {
     accessKeyId: requireEnv("DIGITAL_OCEAN_SPACES_KEY"),
     secretAccessKey: requireEnv("DIGITAL_OCEAN_SPACES_SECRET"),
