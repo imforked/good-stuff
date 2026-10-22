@@ -1,5 +1,5 @@
 import { requireSession } from "../lib/requireSession.js";
-import { generateUploadUrl } from "../lib/generateUploadUrl.js";
+import { createPresignedUpload } from "../lib/createPresignedUpload.js";
 import { Request, Response } from "express";
 import { putImageBodySchema } from "../schemas/uploads.js";
 import { ERROR } from "../constants.js";
@@ -20,7 +20,7 @@ export const putImage = async (req: Request, res: Response) => {
     });
   }
 
-  const upload = await generateUploadUrl(
+  const upload = await createPresignedUpload(
     session.user.id,
     parsed.data.contentType,
   );

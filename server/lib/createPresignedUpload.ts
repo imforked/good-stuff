@@ -7,7 +7,7 @@ import {
 } from "./digital-ocean-spaces.js";
 import { CONTENT_TYPE_WHITE_LIST } from "../constants/contentTypeWhiteList.js";
 
-export const generateUploadUrl = async (
+export const createPresignedUpload = async (
   userId: string,
   contentType: (typeof CONTENT_TYPE_WHITE_LIST)[number],
 ): Promise<{ uploadUrl: string; objectUrl: string; key: string }> => {
