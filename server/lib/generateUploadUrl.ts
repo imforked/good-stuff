@@ -9,14 +9,8 @@ import { CONTENT_TYPE_WHITE_LIST } from "../constants/contentTypeWhiteList.js";
 
 export const generateUploadUrl = async (
   userId: string,
-  contentType: string,
-): Promise<
-  { uploadUrl: string; objectUrl: string; key: string } | undefined
-> => {
-  if (!CONTENT_TYPE_WHITE_LIST.includes(contentType)) {
-    return;
-  }
-
+  contentType: (typeof CONTENT_TYPE_WHITE_LIST)[number],
+): Promise<{ uploadUrl: string; objectUrl: string; key: string }> => {
   const extension = contentType.replace("image/", "");
   const key = `uploads/${userId}/${crypto.randomUUID()}.${extension}`;
 

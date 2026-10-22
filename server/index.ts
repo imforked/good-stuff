@@ -7,6 +7,7 @@ import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { isAllowedOrigin } from "./constants/allowedOrigins.js";
+import { uploadsRouter } from "./routes/uploads.js";
 
 const PORT = process.env.PORT || 3000;
 const PATH_PREFIX = "/api";
@@ -24,7 +25,7 @@ app.use(
       callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(cookieParser());
@@ -35,6 +36,7 @@ app.use(express.json());
 
 app.use(PATH_PREFIX, usersRouter);
 app.use(PATH_PREFIX, postsRouter);
+app.use(PATH_PREFIX, uploadsRouter);
 
 app.use(errorHandler);
 
