@@ -9,3 +9,4 @@ postsRouter.get("/posts/:postId", postsControllers.getPost);
 postsRouter.put("/posts/:postId", postsControllers.updatePost);
 postsRouter.delete("/posts/:postId", postsControllers.deletePost);
 postsRouter.post("/posts/:postId/bookmark", postsControllers.bookmarkPost);
+postsRouter.delete("/posts/:postId/bookmark", postsControllers.unBookmarkPost);

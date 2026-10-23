@@ -96,3 +96,29 @@ export const bookmarkPostService = async (userId: string, postId: string) => {
     throw error;
   }
 };
+
+export const unBookmarkPostService = async (userId: string, postId: string) => {
+  const bookmark = await prisma.bookmark.findUnique({
+    where: {
+      userId_postId: {
+        userId,
+        postId,
+      },
+    },
+  });
+
+  if (!bookmark) {
+    return null;
+  }
+
+  await prisma.bookmark.delete({
+    where: {
+      userId_postId: {
+        userId,
+        postId,
+      },
+    },
+  });
+
+  return bookmark;
+};

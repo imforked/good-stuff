@@ -5,6 +5,7 @@ import {
   deletePostService,
   getPostService,
   getPostsService,
+  unBookmarkPostService,
   updatePostService,
 } from "../services/posts.service.js";
 import {
@@ -14,9 +15,11 @@ import {
   updatePostBodySchema,
   deletePostParamsSchema,
   bookmarkPostParamsSchema,
+  unBookmarkPostParamsSchema,
 } from "../schemas/posts.js";
 import { requireSession } from "../lib/requireSession.js";
 import { ERROR } from "../constants.js";
+import { error } from "node:console";
 
 export const createPost = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
@@ -182,4 +185,34 @@ export const bookmarkPost = async (req: Request, res: Response) => {
   }
 
   return res.status(201).end();
+};
+
+export const unBookmarkPost = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const parsed = unBookmarkPostParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const bookmark = await unBookmarkPostService(
+    session.user.id,
+    parsed.data.postId,
+  );
+
+  if (!bookmark) {
+    return res.status(404).json({
+      error: ERROR.BOOKMARK_NOT_FOUND,
+    });
+  }
+
+  return res.status(204).end();
 };
