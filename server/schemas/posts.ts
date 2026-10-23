@@ -82,3 +82,7 @@ export const updatePostBodySchema = z.object({
 export const deletePostParamsSchema = z.object({
   postId,
 });
+
+export const bookmarkPostParamsSchema = z.object({
+  postId,
+});

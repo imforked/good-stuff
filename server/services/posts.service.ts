@@ -1,3 +1,5 @@
+import { Prisma } from "../prisma/generated/prisma/client.js";
+import { PRISMA_UNIQUE_CONSTRAINT } from "../constants.js";
 import { prisma } from "../lib/prisma.js";
 import { createPostBodySchema } from "../schemas/posts.js";
 import { z } from "zod";
@@ -13,7 +15,7 @@ export const createPostService = async (
     type,
     location,
     heroImgS3Url,
-  }: CreatePostBody
+  }: CreatePostBody,
 ) => {
   return await prisma.post.create({
     data: {
@@ -54,7 +56,7 @@ export const getPostsService = async (userId: string) => {
   });
 
   const bookmarkPostIds = new Set(
-    bookmarkIds.map((bookmark) => bookmark.postId)
+    bookmarkIds.map((bookmark) => bookmark.postId),
   );
 
   return posts.map((post) => {
@@ -77,4 +79,20 @@ export const updatePostService = async ({
 
 export const deletePostService = async (postId: string) => {
   return await prisma.post.delete({ where: { id: postId } });
+};
+
+export const bookmarkPostService = async (userId: string, postId: string) => {
+  try {
+    return await prisma.bookmark.create({ data: { userId, postId } });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === PRISMA_UNIQUE_CONSTRAINT
+    ) {
+      // The user already bookmarked this post.
+      return null;
+    }
+
+    throw error;
+  }
 };

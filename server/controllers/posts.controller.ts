@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  bookmarkPostService,
   createPostService,
   deletePostService,
   getPostService,
@@ -12,6 +13,7 @@ import {
   updatePostParamsSchema,
   updatePostBodySchema,
   deletePostParamsSchema,
+  bookmarkPostParamsSchema,
 } from "../schemas/posts.js";
 import { requireSession } from "../lib/requireSession.js";
 import { ERROR } from "../constants.js";
@@ -145,4 +147,39 @@ export const deletePost = async (req: Request, res: Response) => {
   await deletePostService(parsed.data.postId);
 
   return res.status(204).end();
+};
+
+export const bookmarkPost = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const parsed = bookmarkPostParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const post = await getPostService(parsed.data.postId);
+
+  if (!post) {
+    return res.status(404).json({ error: ERROR.POST_NOT_FOUND });
+  }
+
+  if (post.userId === session.user.id) {
+    return res.status(403).json({ error: ERROR.FORBIDDEN });
+  }
+
+  const bookmark = await bookmarkPostService(session.user.id, post.id);
+
+  if (!bookmark) {
+    return res.status(409).json({ error: ERROR.BOOKMARK_EXISTS });
+  }
+
+  return res.status(201).end();
 };
