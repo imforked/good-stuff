@@ -3,6 +3,7 @@ import {
   bookmarkPostService,
   createPostService,
   deletePostService,
+  getFeedPostService,
   getPostService,
   getPostsService,
   unBookmarkPostService,
@@ -19,7 +20,6 @@ import {
 } from "../schemas/posts.js";
 import { requireSession } from "../lib/requireSession.js";
 import { ERROR } from "../constants.js";
-import { error } from "node:console";
 
 export const createPost = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
@@ -56,7 +56,7 @@ export const getPost = async (req: Request, res: Response) => {
     });
   }
 
-  const post = await getPostService(parsed.data.postId);
+  const post = await getFeedPostService(parsed.data.postId, session.user.id);
 
   if (!post) {
     return res.status(404).json({ error: ERROR.POST_NOT_FOUND });

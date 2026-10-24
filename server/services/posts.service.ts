@@ -34,6 +34,39 @@ export const getPostService = async (postId: string) => {
   return await prisma.post.findUnique({ where: { id: postId } });
 };
 
+export const getFeedPostService = async (postId: string, userId: string) => {
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      user: { include: { profile: true } },
+      saves: {
+        take: 3,
+        include: { user: { include: { profile: true } } },
+        orderBy: { createdAt: "desc" },
+      },
+      _count: { select: { saves: true } },
+    },
+  });
+
+  if (!post) {
+    return null;
+  }
+
+  const bookmark = await prisma.bookmark.findUnique({
+    where: {
+      userId_postId: {
+        userId,
+        postId,
+      },
+    },
+  });
+
+  return {
+    isBookmarked: Boolean(bookmark),
+    ...post,
+  };
+};
+
 export const getPostsService = async (userId: string) => {
   const posts = await prisma.post.findMany({
     orderBy: {
