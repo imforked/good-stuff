@@ -217,6 +217,7 @@ model Group {
 model UserList {
   id String @id @default(cuid())
 
+  title     String
   posts Post[]
 
   userId    String
