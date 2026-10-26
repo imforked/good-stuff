@@ -11,9 +11,7 @@ export const createListController = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: ERROR.INVALID_PARAMS,
-    });
+    return;
   }
 
   const parsed = createListBodySchema.safeParse(req.body);
@@ -25,36 +23,40 @@ export const createListController = async (req: Request, res: Response) => {
     });
   }
 
-  const list = createListService(session.user.id, parsed.data?.title);
+  const list = await createListService(session.user.id, parsed.data.title);
 
-  return res.status(200).json(list);
+  return res.status(201).json(list);
 };
 
 export const getListController = async (req: Request, res: Response) => {
-  const session = requireSession(req, res);
+  const session = await requireSession(req, res);
 
   if (!session) {
-    return res.status(400).json({
-      error: ERROR.INVALID_PARAMS,
-    });
+    return;
   }
 
   const parsed = getListParamsSchema.safeParse(req.params);
 
   if (!parsed.success) {
     return res.status(400).json({
-      error: ERROR.INVALID_BODY,
+      error: ERROR.INVALID_PARAMS,
       details: parsed.error.flatten(),
     });
   }
 
-  const lists = await getListService(parsed.data.listId);
+  const list = await getListService(parsed.data.listId);
 
-  if (!lists) {
+  if (!list) {
     return res.status(404).send({
       error: ERROR.LISTS_NOT_FOUND,
     });
   }
 
-  return res.status(200).json(lists);
+  if (list.userId !== session.user.id) {
+    return res.status(403).json({
+      error: ERROR.FORBIDDEN,
+    });
+  }
+
+  return res.status(200).json(list);
 };

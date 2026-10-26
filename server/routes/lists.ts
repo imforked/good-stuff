@@ -4,4 +4,4 @@ import * as listsControllers from "../controllers/lists.controller.js";
 export const listsRouter = Router();
 
 listsRouter.post("/lists", listsControllers.createListController);
-listsRouter.get("/lists/:postId", listsControllers.getListController);
+listsRouter.get("/lists/:listId", listsControllers.getListController);
