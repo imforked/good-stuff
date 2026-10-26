@@ -7,7 +7,8 @@ export const ERROR = {
   POST_NOT_FOUND: "post not found",
   SOMETHING_WENT_WRONG: "something went wrong.",
   BOOKMARK_EXISTS: "bookmark exists",
-  BOOKMARK_NOT_FOUND: "bookmark not found"
+  BOOKMARK_NOT_FOUND: "bookmark not found",
+  LISTS_NOT_FOUND: "lists not found",
 } as const;
 
 export const PRISMA_UNIQUE_CONSTRAINT = "P2002";

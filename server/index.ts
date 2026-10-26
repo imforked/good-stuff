@@ -8,6 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { isAllowedOrigin } from "./constants/allowedOrigins.js";
 import { uploadsRouter } from "./routes/uploads.js";
+import { listsRouter } from "./routes/lists.js";
 
 const PORT = process.env.PORT || 3000;
 const PATH_PREFIX = "/api";
@@ -37,6 +38,7 @@ app.use(express.json());
 app.use(PATH_PREFIX, usersRouter);
 app.use(PATH_PREFIX, postsRouter);
 app.use(PATH_PREFIX, uploadsRouter);
+app.use(PATH_PREFIX, listsRouter);
 
 app.use(errorHandler);
 
