@@ -1,6 +1,7 @@
 import { Router } from "express";
+import * as listsControllers from "../controllers/lists.controller.js";
 
 export const listsRouter = Router();
 
-listsRouter.post("/lists");
-listsRouter.get("/lists/:postId");
+listsRouter.post("/lists", listsControllers.createListController);
+listsRouter.get("/lists/:postId", listsControllers.getListController);

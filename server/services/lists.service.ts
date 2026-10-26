@@ -1,9 +1,9 @@
 import { prisma } from "../lib/prisma.js";
 
-export const createList = async (userId: string, title: string) => {
-  
-}
+export const createListService = async (userId: string, title: string) => {
+  return await prisma.userList.create({ data: { userId, title } });
+};
 
-export const getList = async (listId: string) => {
+export const getListService = async (listId: string) => {
   return await prisma.userList.findUnique({ where: { id: listId } });
 };
