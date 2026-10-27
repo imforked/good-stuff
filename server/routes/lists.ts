@@ -14,3 +14,4 @@ listsRouter.delete(
   "/lists/:listId/posts/:postId",
   listsControllers.deletePostFromUserListController,
 );
+listsRouter.get("/lists", listsControllers.getUserLists);

@@ -12,6 +12,7 @@ import {
   deleteUserListService,
   addPostToUserListService,
   deletePostFromUserListService,
+  getUserListsService,
 } from "../services/lists.service.js";
 import { ERROR } from "../constants.js";
 import { getPostService } from "../services/posts.service.js";
@@ -209,4 +210,16 @@ export const deletePostFromUserListController = async (
   );
 
   return res.status(200).json(updatedList);
+};
+
+export const getUserLists = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const lists = await getUserListsService(session.user.id);
+
+  return res.status(200).json(lists);
 };

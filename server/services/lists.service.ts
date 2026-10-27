@@ -43,3 +43,10 @@ export const deletePostFromUserListService = async (
     include: { posts: true },
   });
 };
+
+export const getUserListsService = async (userId: string) => {
+  return await prisma.userList.findMany({
+    where: { userId },
+    include: { posts: true },
+  });
+};
