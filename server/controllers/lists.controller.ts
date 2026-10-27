@@ -1,28 +1,29 @@
 import { Request, Response } from "express";
 import {
-  getListParamsSchema,
-  createListBodySchema,
+  getUserListParamsSchema,
+  createUserListBodySchema,
   addPostToUserListParamsSchema,
-  removePostFromUserListParamsSchema,
+  deletePostFromUserListParamsSchema,
 } from "../schemas/lists.js";
 import { requireSession } from "../lib/requireSession.js";
 import {
-  getListService,
-  createListService,
+  getUserListService,
+  createUserListService,
+  deleteUserListService,
   addPostToUserListService,
-  removePostFromUserListService,
+  deletePostFromUserListService,
 } from "../services/lists.service.js";
 import { ERROR } from "../constants.js";
 import { getPostService } from "../services/posts.service.js";
 
-export const createListController = async (req: Request, res: Response) => {
+export const createUserListController = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
 
   if (!session) {
     return;
   }
 
-  const parsed = createListBodySchema.safeParse(req.body);
+  const parsed = createUserListBodySchema.safeParse(req.body);
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -31,19 +32,19 @@ export const createListController = async (req: Request, res: Response) => {
     });
   }
 
-  const list = await createListService(session.user.id, parsed.data.title);
+  const list = await createUserListService(session.user.id, parsed.data.title);
 
   return res.status(201).json(list);
 };
 
-export const getListController = async (req: Request, res: Response) => {
+export const getUserListController = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
 
   if (!session) {
     return;
   }
 
-  const parsed = getListParamsSchema.safeParse(req.params);
+  const parsed = getUserListParamsSchema.safeParse(req.params);
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -52,7 +53,7 @@ export const getListController = async (req: Request, res: Response) => {
     });
   }
 
-  const list = await getListService(parsed.data.listId);
+  const list = await getUserListService(parsed.data.listId);
 
   if (!list) {
     return res.status(404).send({
@@ -67,6 +68,41 @@ export const getListController = async (req: Request, res: Response) => {
   }
 
   return res.status(200).json(list);
+};
+
+export const deleteUserListController = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const parsed = getUserListParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const list = await getUserListService(parsed.data.listId);
+
+  if (!list) {
+    return res.status(404).send({
+      error: ERROR.LISTS_NOT_FOUND,
+    });
+  }
+
+  if (list.userId !== session.user.id) {
+    return res.status(403).json({
+      error: ERROR.FORBIDDEN,
+    });
+  }
+
+  await deleteUserListService(parsed.data.listId);
+
+  return res.status(204).end();
 };
 
 export const addPostToUserListController = async (
@@ -88,7 +124,7 @@ export const addPostToUserListController = async (
     });
   }
 
-  const list = await getListService(parsed.data.listId);
+  const list = await getUserListService(parsed.data.listId);
 
   if (!list) {
     return res.status(404).send({
@@ -118,7 +154,7 @@ export const addPostToUserListController = async (
   return res.status(200).json(updatedList);
 };
 
-export const removePostFromUserListController = async (
+export const deletePostFromUserListController = async (
   req: Request,
   res: Response,
 ) => {
@@ -128,7 +164,7 @@ export const removePostFromUserListController = async (
     return;
   }
 
-  const parsed = removePostFromUserListParamsSchema.safeParse(req.params);
+  const parsed = deletePostFromUserListParamsSchema.safeParse(req.params);
 
   if (!parsed.success) {
     return res.status(400).json({
@@ -137,7 +173,7 @@ export const removePostFromUserListController = async (
     });
   }
 
-  const list = await getListService(parsed.data.listId);
+  const list = await getUserListService(parsed.data.listId);
 
   if (!list) {
     return res.status(404).send({
@@ -167,7 +203,7 @@ export const removePostFromUserListController = async (
     });
   }
 
-  const updatedList = await removePostFromUserListService(
+  const updatedList = await deletePostFromUserListService(
     parsed.data.listId,
     parsed.data.postId,
   );

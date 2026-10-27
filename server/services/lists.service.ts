@@ -1,13 +1,13 @@
 import { prisma } from "../lib/prisma.js";
 
-export const createListService = async (userId: string, title: string) => {
+export const createUserListService = async (userId: string, title: string) => {
   return await prisma.userList.create({
     data: { userId, title },
     include: { posts: true },
   });
 };
 
-export const getListService = async (listId: string) => {
+export const getUserListService = async (listId: string) => {
   return await prisma.userList.findUnique({
     where: { id: listId },
     include: { posts: true },
@@ -27,7 +27,11 @@ export const addPostToUserListService = async (
   });
 };
 
-export const removePostFromUserListService = async (
+export const deleteUserListService = async (listId: string) => {
+  return await prisma.userList.delete({ where: { id: listId } });
+};
+
+export const deletePostFromUserListService = async (
   listId: string,
   postId: string,
 ) => {
