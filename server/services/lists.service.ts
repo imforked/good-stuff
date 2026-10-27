@@ -26,3 +26,16 @@ export const addPostToUserListService = async (
     include: { posts: true },
   });
 };
+
+export const removePostFromUserListService = async (
+  listId: string,
+  postId: string,
+) => {
+  return await prisma.userList.update({
+    where: { id: listId },
+    data: {
+      posts: { disconnect: { id: postId } },
+    },
+    include: { posts: true },
+  });
+};

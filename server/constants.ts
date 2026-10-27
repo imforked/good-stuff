@@ -9,6 +9,7 @@ export const ERROR = {
   BOOKMARK_EXISTS: "bookmark exists",
   BOOKMARK_NOT_FOUND: "bookmark not found",
   LISTS_NOT_FOUND: "lists not found",
+  POST_NOT_ON_LIST: "post not on list",
 } as const;
 
 export const PRISMA_UNIQUE_CONSTRAINT = "P2002";

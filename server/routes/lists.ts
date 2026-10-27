@@ -9,3 +9,7 @@ listsRouter.post(
   "/lists/:listId/posts/:postId",
   listsControllers.addPostToUserListController,
 );
+listsRouter.delete(
+  "/lists/:listId/posts/:postId",
+  listsControllers.removePostFromUserListController,
+);

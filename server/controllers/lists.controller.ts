@@ -3,12 +3,14 @@ import {
   getListParamsSchema,
   createListBodySchema,
   addPostToUserListParamsSchema,
+  removePostFromUserListParamsSchema,
 } from "../schemas/lists.js";
 import { requireSession } from "../lib/requireSession.js";
 import {
   getListService,
   createListService,
   addPostToUserListService,
+  removePostFromUserListService,
 } from "../services/lists.service.js";
 import { ERROR } from "../constants.js";
 import { getPostService } from "../services/posts.service.js";
@@ -109,6 +111,63 @@ export const addPostToUserListController = async (
   }
 
   const updatedList = await addPostToUserListService(
+    parsed.data.listId,
+    parsed.data.postId,
+  );
+
+  return res.status(200).json(updatedList);
+};
+
+export const removePostFromUserListController = async (
+  req: Request,
+  res: Response,
+) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const parsed = removePostFromUserListParamsSchema.safeParse(req.params);
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: ERROR.INVALID_PARAMS,
+      details: parsed.error.flatten(),
+    });
+  }
+
+  const list = await getListService(parsed.data.listId);
+
+  if (!list) {
+    return res.status(404).send({
+      error: ERROR.LISTS_NOT_FOUND,
+    });
+  }
+
+  if (list.userId !== session.user.id) {
+    return res.status(403).json({
+      error: ERROR.FORBIDDEN,
+    });
+  }
+
+  const post = await getPostService(parsed.data.postId);
+
+  if (!post) {
+    return res.status(404).send({
+      error: ERROR.POST_NOT_FOUND,
+    });
+  }
+
+  const postIsOnList = list.posts.some((item) => item.id === post.id);
+
+  if (!postIsOnList) {
+    return res.status(404).json({
+      error: ERROR.POST_NOT_ON_LIST,
+    });
+  }
+
+  const updatedList = await removePostFromUserListService(
     parsed.data.listId,
     parsed.data.postId,
   );
