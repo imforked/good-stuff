@@ -19,7 +19,7 @@ import {
   unBookmarkPostParamsSchema,
 } from "../schemas/posts.js";
 import { requireSession } from "../lib/requireSession.js";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 
 export const createPost = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);

@@ -11,5 +11,3 @@ export const ERROR = {
   LISTS_NOT_FOUND: "lists not found",
   POST_NOT_ON_LIST: "post not on list",
 } as const;
-
-export const PRISMA_UNIQUE_CONSTRAINT = "P2002";

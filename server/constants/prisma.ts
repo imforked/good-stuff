@@ -1,0 +1,1 @@
+export const PRISMA_UNIQUE_CONSTRAINT = "P2002";

@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error(err);

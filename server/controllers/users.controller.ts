@@ -10,7 +10,7 @@ import {
   getProfileService,
 } from "../services/users.service.js";
 import { requireSession } from "../lib/requireSession.js";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 
 export const createProfile = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);

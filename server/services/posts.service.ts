@@ -1,5 +1,5 @@
 import { Prisma } from "../prisma/generated/prisma/client.js";
-import { PRISMA_UNIQUE_CONSTRAINT } from "../constants.js";
+import { PRISMA_UNIQUE_CONSTRAINT } from "../constants/prisma.js";
 import { REDIS_KEYS } from "../constants/redisKeys.js";
 import { prisma } from "../lib/prisma.js";
 import { createPostBodySchema } from "../schemas/posts.js";

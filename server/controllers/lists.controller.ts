@@ -14,7 +14,7 @@ import {
   deletePostFromUserListService,
   getUserListsService,
 } from "../services/lists.service.js";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 import { getPostService } from "../services/posts.service.js";
 
 export const createUserListController = async (req: Request, res: Response) => {

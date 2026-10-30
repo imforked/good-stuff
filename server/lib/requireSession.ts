@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth.js";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 
 export const requireSession = async (req: Request, res: Response) => {
   const session = await auth.api.getSession({

@@ -2,7 +2,7 @@ import { requireSession } from "../lib/requireSession.js";
 import { createPresignedUpload } from "../lib/createPresignedUpload.js";
 import { Request, Response } from "express";
 import { createUploadBodySchema } from "../schemas/uploads.js";
-import { ERROR } from "../constants.js";
+import { ERROR } from "../constants/error.js";
 
 export const createUpload = async (req: Request, res: Response) => {
   const session = await requireSession(req, res);
