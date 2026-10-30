@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import { isAllowedOrigin } from "./constants/allowedOrigins.js";
 import { uploadsRouter } from "./routes/uploads.js";
 import { listsRouter } from "./routes/lists.js";
+import { redis } from "./lib/redis.js";
 
 const PORT = process.env.PORT || 3000;
 const PATH_PREFIX = "/api";
@@ -41,6 +42,10 @@ app.use(PATH_PREFIX, uploadsRouter);
 app.use(PATH_PREFIX, listsRouter);
 
 app.use(errorHandler);
+
+await redis.connect().then(() => {
+  console.log("Connected to Redis.");
+});
 
 app.listen(PORT, () => {
   console.log(`The server has started on port ${PORT} 🤠`);
