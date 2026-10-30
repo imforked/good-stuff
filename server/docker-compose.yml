@@ -6,6 +6,10 @@
 # URL matches POSTGRES_* below. Override DATABASE_URL if needed.
 
 services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
   db:
     image: postgres:16-alpine
     environment:
