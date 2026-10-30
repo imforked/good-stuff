@@ -1,8 +1,11 @@
 import { Prisma } from "../prisma/generated/prisma/client.js";
 import { PRISMA_UNIQUE_CONSTRAINT } from "../constants.js";
+import { REDIS_KEYS } from "../constants/redisKeys.js";
 import { prisma } from "../lib/prisma.js";
 import { createPostBodySchema } from "../schemas/posts.js";
 import { z } from "zod";
+import { redis } from "../lib/redis.js";
+import { Post } from "../prisma/generated/prisma/client.js";
 
 type CreatePostBody = z.infer<typeof createPostBodySchema>;
 
@@ -68,20 +71,34 @@ export const getFeedPostService = async (postId: string, userId: string) => {
 };
 
 export const getPostsService = async (userId: string) => {
-  const posts = await prisma.post.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-    include: {
-      user: { include: { profile: true } },
-      saves: {
-        take: 3,
-        include: { user: { include: { profile: true } } },
-        orderBy: { createdAt: "desc" },
+  // If the Redis read fails, return null. A missing key also returns null, so either way we load the posts from Postgres.
+  const cache = await redis.get(REDIS_KEYS.FEED_POSTS).catch(() => null);
+
+  let posts: Post[];
+
+  if (cache) {
+    posts = JSON.parse(cache);
+  } else {
+    posts = await prisma.post.findMany({
+      orderBy: {
+        createdAt: "desc",
       },
-      _count: { select: { saves: true } },
-    },
-  });
+      include: {
+        user: { include: { profile: true } },
+        saves: {
+          take: 3,
+          include: { user: { include: { profile: true } } },
+          orderBy: { createdAt: "desc" },
+        },
+        _count: { select: { saves: true } },
+      },
+    });
+
+    // If the Redis save fails, ignore the error. The posts are already loaded from Postgres, so this request does not need a return value.
+    await redis
+      .set(REDIS_KEYS.FEED_POSTS, JSON.stringify(posts), { EX: 30 })
+      .catch(() => {});
+  }
 
   const bookmarkIds = await prisma.bookmark.findMany({
     where: { userId, postId: { in: posts.map((post) => post.id) } },
