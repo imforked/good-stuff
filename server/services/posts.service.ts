@@ -20,7 +20,7 @@ export const createPostService = async (
     heroImgS3Url,
   }: CreatePostBody,
 ) => {
-  return await prisma.post.create({
+  const post = await prisma.post.create({
     data: {
       userId,
       heroImgS3Url,
@@ -31,6 +31,10 @@ export const createPostService = async (
       location,
     },
   });
+
+  await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
+
+  return post;
 };
 
 export const getPostService = async (postId: string) => {
@@ -124,18 +128,31 @@ export const updatePostService = async ({
   postId: string;
   title: string;
 }) => {
-  return await prisma.post.update({ where: { id: postId }, data: { title } });
+  const post = await prisma.post.update({
+    where: { id: postId },
+    data: { title },
+  });
+
+  await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
+
+  return post;
 };
 
 export const deletePostService = async (postId: string) => {
-  await prisma.post.delete({ where: { id: postId } });
+  const post = await prisma.post.delete({ where: { id: postId } });
 
   await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
+
+  return post;
 };
 
 export const bookmarkPostService = async (userId: string, postId: string) => {
   try {
-    return await prisma.bookmark.create({ data: { userId, postId } });
+    const bookmark = await prisma.bookmark.create({ data: { userId, postId } });
+
+    await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
+
+    return bookmark;
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -171,6 +188,8 @@ export const unBookmarkPostService = async (userId: string, postId: string) => {
       },
     },
   });
+
+  await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
 
   return bookmark;
 };
