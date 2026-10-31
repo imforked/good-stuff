@@ -128,7 +128,9 @@ export const updatePostService = async ({
 };
 
 export const deletePostService = async (postId: string) => {
-  return await prisma.post.delete({ where: { id: postId } });
+  await prisma.post.delete({ where: { id: postId } });
+
+  await redis.del(REDIS_KEYS.FEED_POSTS).catch(() => null);
 };
 
 export const bookmarkPostService = async (userId: string, postId: string) => {
