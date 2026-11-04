@@ -35,6 +35,10 @@ export const createUserListController = async (req: Request, res: Response) => {
 
   const list = await createUserListService(session.user.id, parsed.data.title);
 
+  if (!list) {
+    return res.status(409).json({ error: ERROR.LIST_TITLE_EXISTS });
+  }
+
   return res.status(201).json(list);
 };
 

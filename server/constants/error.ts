@@ -10,4 +10,5 @@ export const ERROR = {
   BOOKMARK_NOT_FOUND: "bookmark not found",
   LISTS_NOT_FOUND: "lists not found",
   POST_NOT_ON_LIST: "post not on list",
+  LIST_TITLE_EXISTS: "list title exists",
 } as const;
