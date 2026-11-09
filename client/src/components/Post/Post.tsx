@@ -2,28 +2,67 @@ import { type PostProps } from "./Post.types";
 import { useNavigate } from "react-router";
 import { BookmarkIcon } from "./assets/BookmarkIcon";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "../../constants/queryKeys";
 
 const formatLabel = (value: string) => value.replaceAll("_", " ");
 
 export const Post = ({
+  id,
   heroImgS3Url,
   title,
   shortDescription,
   longDescription,
   type,
   location,
-  isBookmarked: initialIsBookmarked,
+  isBookmarked,
   user,
   saves,
   _count,
 }: PostProps) => {
-  const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const [isDescriptionActive, setIsDescriptionActive] = useState(false);
 
   const navigate = useNavigate();
 
   const recommenderName = user.profile?.displayName ?? user.name;
   const recommenderImage = user.profile?.pfpS3Url ?? user.image ?? undefined;
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const queryClient = useQueryClient();
+
+  const bookmarkMutation = useMutation({
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: queryKeys.posts }),
+    mutationFn: async () => {
+      if (isBookmarked) {
+        const response = await fetch(
+          `${BACKEND_URL}/api/posts/${id}/bookmark`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error. Status: ${response.status}`);
+        }
+      }
+      if (!isBookmarked) {
+        const response = await fetch(
+          `${BACKEND_URL}/api/posts/${id}/bookmark`,
+          {
+            method: "POST",
+            credentials: "include",
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP Error. Status: ${response.status}`);
+        }
+      }
+    },
+  });
 
   return (
     <div
@@ -34,7 +73,7 @@ export const Post = ({
         className="absolute top-3 right-3 z-1 cursor-pointer"
         onClick={(event) => {
           event.stopPropagation();
-          setIsBookmarked(!isBookmarked);
+          bookmarkMutation.mutate();
         }}
       >
         <BookmarkIcon filled={isBookmarked} className="text-white" />
@@ -99,7 +138,7 @@ export const Post = ({
                     onClick={(event) => {
                       event.stopPropagation();
                       console.log(
-                        "eventually this will open a list of people who saved the recommendation"
+                        "eventually this will open a list of people who saved the recommendation",
                       );
                     }}
                     className="cursor-pointer"
