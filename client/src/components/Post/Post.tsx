@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../constants/queryKeys";
 import { authClient } from "../../lib/auth-client";
+import { toast } from "../Toast";
 
 const formatLabel = (value: string) => value.replaceAll("_", " ");
 
@@ -38,6 +39,13 @@ export const Post = ({
   const bookmarkMutation = useMutation({
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.posts }),
+    onError: () => {
+      toast.error(
+        isBookmarked
+          ? "Couldn't remove this bookmark."
+          : "Couldn't save this post.",
+      );
+    },
     mutationFn: async () => {
       if (isBookmarked) {
         const response = await fetch(
