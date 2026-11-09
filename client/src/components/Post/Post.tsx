@@ -4,6 +4,7 @@ import { BookmarkIcon } from "./assets/BookmarkIcon";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "../../constants/queryKeys";
+import { authClient } from "../../lib/auth-client";
 
 const formatLabel = (value: string) => value.replaceAll("_", " ");
 
@@ -16,11 +17,14 @@ export const Post = ({
   type,
   location,
   isBookmarked,
+  userId,
   user,
   saves,
   _count,
 }: PostProps) => {
   const [isDescriptionActive, setIsDescriptionActive] = useState(false);
+  const { data: session } = authClient.useSession();
+  const isOwner = session?.user.id === userId;
 
   const navigate = useNavigate();
 
@@ -69,15 +73,17 @@ export const Post = ({
       onClick={() => setIsDescriptionActive(!isDescriptionActive)}
       className="relative w-full rounded-md shadow bg-white overflow-hidden text-left cursor-pointer"
     >
-      <button
-        className="absolute top-3 right-3 z-1 cursor-pointer"
-        onClick={(event) => {
-          event.stopPropagation();
-          bookmarkMutation.mutate();
-        }}
-      >
-        <BookmarkIcon filled={isBookmarked} className="text-white" />
-      </button>
+      {isOwner ? null : (
+        <button
+          className="absolute top-3 right-3 z-1 cursor-pointer"
+          onClick={(event) => {
+            event.stopPropagation();
+            bookmarkMutation.mutate();
+          }}
+        >
+          <BookmarkIcon filled={isBookmarked} className="text-white" />
+        </button>
+      )}
       <div className="relative w-full aspect-3/2">
         <img
           src={heroImgS3Url}
