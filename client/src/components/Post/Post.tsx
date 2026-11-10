@@ -39,12 +39,48 @@ export const Post = ({
   const bookmarkMutation = useMutation({
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.posts }),
-    onError: () => {
+    onError: (error, variables, previousPosts) => {
+      queryClient.setQueryData(queryKeys.posts, previousPosts);
+
+      const currentPost = previousPosts?.find((post) => post.id === id);
+
+      if (!currentPost) {
+        toast.error("Something went wrong.");
+        return;
+      }
+
       toast.error(
-        isBookmarked
+        currentPost.isBookmarked
           ? "Couldn't remove this bookmark."
           : "Couldn't save this post.",
       );
+    },
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.posts });
+
+      const previousPosts = queryClient.getQueryData<PostProps[]>(
+        queryKeys.posts,
+      );
+
+      if (!previousPosts?.length) {
+        return;
+      }
+
+      const updatedPosts = previousPosts.map((post) => {
+        if (post.id === id) {
+          return {
+            ...post,
+            isBookmarked: !post.isBookmarked,
+            _count: { saves: post._count.saves + (post.isBookmarked ? -1 : 1) },
+          };
+        } else {
+          return post;
+        }
+      });
+
+      queryClient.setQueryData(queryKeys.posts, updatedPosts);
+
+      return previousPosts;
     },
     mutationFn: async () => {
       if (isBookmarked) {
