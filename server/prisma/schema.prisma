@@ -207,6 +207,7 @@ model Bookmark {
 model Group {
   id String @id @default(cuid())
 
+  title   String
   members GroupMember[]
   lists   GroupList[]
 
@@ -231,12 +232,15 @@ model UserList {
 model GroupList {
   id String @id @default(cuid())
 
+  title String
   posts Post[]
 
   groupId   String
   group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@unique([groupId, title])
 }
 
 model GroupMember {
