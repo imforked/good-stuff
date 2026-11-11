@@ -11,4 +11,5 @@ export const ERROR = {
   LISTS_NOT_FOUND: "lists not found",
   POST_NOT_ON_LIST: "post not on list",
   LIST_TITLE_EXISTS: "list title exists",
+  GROUP_NOT_FOUND: "group not found",
 } as const;

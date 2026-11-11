@@ -28,3 +28,19 @@ export const getGroupsService = async ({ userId }: { userId: string }) => {
     include: { group: true },
   });
 };
+
+export const getGroupService = async ({ groupId }: { groupId: string }) => {
+  return await prisma.group.findUnique({ where: { id: groupId } });
+};
+
+export const getGroupMemberService = async ({
+  groupId,
+  userId,
+}: {
+  groupId: string;
+  userId: string;
+}) => {
+  return await prisma.groupMember.findUnique({
+    where: { userId_groupId: { groupId, userId } },
+  });
+};

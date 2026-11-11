@@ -5,3 +5,4 @@ export const groupsRouter = Router();
 
 groupsRouter.post("/groups", groupsController.createGroupController);
 groupsRouter.get("/groups", groupsController.getGroupsController);
+groupsRouter.get("/groups/:groupId", groupsController.getGroupController);
