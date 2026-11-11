@@ -1,14 +1,15 @@
 import express from "express";
 import { usersRouter } from "./routes/users.js";
 import { postsRouter } from "./routes/posts.js";
+import { uploadsRouter } from "./routes/uploads.js";
+import { listsRouter } from "./routes/lists.js";
+import { groupsRouter } from "./routes/groups.js";
 import { errorHandler } from "./middleware/index.js";
 import { auth } from "./lib/auth.js";
 import { toNodeHandler } from "better-auth/node";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { isAllowedOrigin } from "./constants/allowedOrigins.js";
-import { uploadsRouter } from "./routes/uploads.js";
-import { listsRouter } from "./routes/lists.js";
 import { redis } from "./lib/redis.js";
 
 const PORT = process.env.PORT || 3000;
@@ -40,6 +41,7 @@ app.use(PATH_PREFIX, usersRouter);
 app.use(PATH_PREFIX, postsRouter);
 app.use(PATH_PREFIX, uploadsRouter);
 app.use(PATH_PREFIX, listsRouter);
+app.use(PATH_PREFIX, groupsRouter);
 
 app.use(errorHandler);
 

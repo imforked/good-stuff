@@ -4,6 +4,7 @@ export const POST_TITLE_MAX_CHAR = 100;
 export const POST_SHORT_DESCRIPTION_MAX_CHAR = 40;
 export const POST_LONG_DESCRIPTION_MAX_CHAR = 200;
 export const LIST_TITLE_MAX_CHAR = 100;
+export const GROUP_TITLE_MAX_CHAR = 100;
 
 export const POST_TYPES = [
   "RESTAURANT",
