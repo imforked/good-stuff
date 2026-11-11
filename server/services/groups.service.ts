@@ -21,3 +21,10 @@ export const createGroupService = async ({
     },
   });
 };
+
+export const getGroupsService = async ({ userId }: { userId: string }) => {
+  return await prisma.groupMember.findMany({
+    where: { userId },
+    include: { group: true },
+  });
+};

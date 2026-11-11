@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { requireSession } from "../lib/requireSession.js";
 import { ERROR } from "../constants/error.js";
-import { createGroupService } from "../services/groups.service.js";
+import {
+  createGroupService,
+  getGroupsService,
+} from "../services/groups.service.js";
 import { createGroupBodySchema } from "../schemas/groups.js";
 
 export const createGroupController = async (req: Request, res: Response) => {
@@ -26,4 +29,16 @@ export const createGroupController = async (req: Request, res: Response) => {
   });
 
   return res.status(201).json(group);
+};
+
+export const getGroupsController = async (req: Request, res: Response) => {
+  const session = await requireSession(req, res);
+
+  if (!session) {
+    return;
+  }
+
+  const groups = await getGroupsService({ userId: session.user.id });
+
+  return res.status(200).json(groups);
 };
